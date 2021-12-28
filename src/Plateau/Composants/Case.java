@@ -1,4 +1,6 @@
-package Jeu;
+package Plateau.Composants;
+
+import Plateau.Infrastructures.Route;
 
 public class Case {
     private final int numero;
