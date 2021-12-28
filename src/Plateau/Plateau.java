@@ -4,13 +4,14 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Random;
 
+import Jeu.Communication;
 import Joueur.Joueur;
 import Plateau.Composants.Case;
 
 public class Plateau {
 
     private Case[][] plateau;
-    private LinkedList<Joueur> listJoueur;
+    private LinkedList<Joueur> listJoueurs;
 
     public Plateau() {
         LinkedList<Integer> jeton = new LinkedList<>(Arrays.asList(2, 3, 4, 5, 5, 6, 6, 8, 8, 9, 9, 10, 10, 11, 12));
@@ -31,6 +32,12 @@ public class Plateau {
                 }
             }
         }
+
+        Communication c = new Communication();
+
+        int nbJoueurs = c.demanderNombreJoueurs();
+        for (int i = 0; i < nbJoueurs; i++)
+            listJoueurs.add(c.demanderJoueurs(i));
     }
 
 }
