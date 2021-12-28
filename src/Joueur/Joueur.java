@@ -13,7 +13,7 @@ public class Joueur {
     private LinkedList<Object> listeVilles;
     private LinkedList<CarteRessources> deckCarteRessources;
 
-    Joueur(String nom, boolean ai) {
+    public Joueur(String nom, boolean ai) {
         this.nom = nom;
         this.ai = ai;
         points = 0;
