@@ -63,6 +63,10 @@ public class Case {
         }
     }
 
+    public String toString() {
+        return "  " + numero + "  " + environment;
+    }
+
     int getNumero() {
         return numero;
     }
