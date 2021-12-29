@@ -13,4 +13,8 @@ public class CarteRessources extends Carte {
         System.out.println("CarteRessources " + this.nom);
     }
 
+    public String getNom() {
+        return this.nom;
+    }
+
 }
