@@ -10,9 +10,8 @@ public class Joueur {
     private final String nom;
     private final boolean ai;
     private int points;
-    public  int Id=0;
     public String couleur;
-    private LinkedList<Piece> piece;
+    private LinkedList<Colonie> colonie;
     private LinkedList<CarteRessources> deckCarteRessources;
     private LInkedeList<CartesDeveloppemen> deckCarteDeveloppement;
     
@@ -163,7 +162,7 @@ public class Joueur {
 				int r=rd.nextInt(3);
 				switch (r){
 				case 0:  System.out.println("Vous avez tiré au sort une carte de construction de route, vous pouvez en construire 2 !!");
-				ConstruireRoute();
+				ConstruireRoute(); break;
 				case 1: System.out.println("Vous avez tiré au sort une carte invention !!");
 					//a finir, il faut choisir deux ressources et les ajouter aux decks, peut-être avec une fonction qui prend en parametre une String et un entier
 				case 2: System.out.println("Vous avez tiré au sort une carte monopole !! Veuillez designer la ressource souhaitée :");
@@ -189,8 +188,93 @@ public class Joueur {
 	}
 	}
 	
-	public void Commercer(){
 	
+	public void Commercer(){
+	int nbArgile=nbRessourceArgile();
+		int nbBois= nbRessourceBois();
+		int nbLaine=nbRessourceLaine();
+		int nbBle=nbRessourceBle();
+		int nbMinerai=nbRessourceMinerai();
+		Scanner sc = new Scanner(System.in);
+		String s = sc.nextLine();
+		while(s.hasNextLine()){
+			System.out.println("Choisissez un taux de change : 4:1       3:1        2:1");
+		s=sc.nextLine();
+		if(s.equals("4:1"){
+			System.out.println("Ce taux vous permet d'échanger quatre matière première identique contre une de votre choix");
+			System.out.println("Matériel en possession : Argile("+nbArgile+"), Bois("+ nbBois+"), Laine("+nbLaine+"), Blé("+nbBle+"), Minerai("+nbMinerai+")");
+			if(nbArgile<4 && nbBois <4 && nbLaine<4 && nbBle < && nbMinerai<4){
+			System.out.println("Vous n'avez pas les ressouces nécessaire");
+			}
+			else{
+				System.out.println("Quel matière voulez-vous remettre au talons ?");
+				String aux =sc.nextLine();
+				if(aux.equals("Bois")){
+					perdreRessource("Bois", 4);
+					System.out.println("Quel matière voulez vous recevoir")
+					String tmp=sc.nextLine();
+					switch(tmp){
+					case "Bois" : recevoirRessource("Bois",1); break;
+					case "Blé" : recevoirRessource("Ble",1); break;
+					case "Laine" : recevoirRessource("Laine",1); break;
+					case "Argile" : recevoirRessource("Argile",1); break;
+					case "Minerai" : recevoirRessource("Minerai",1); break;
+					}
+				}
+				if(aux.equals("Blé")){
+					perdreRessource("Ble", 4);
+					System.out.println("Quel matière voulez vous recevoir")
+					String tmp=sc.nextLine();
+					switch(tmp){
+					case "Bois" : recevoirRessource("Bois",1); break;
+					case "Blé" : recevoirRessource("Ble",1); break;
+					case "Laine" : recevoirRessource("Laine",1); break;
+					case "Argile" : recevoirRessource("Argile",1); break;
+					case "Minerai" : recevoirRessource("Minerai",1); break;
+					}
+				}
+				if(aux.equals("Laine")){
+					perdreRessource("Laine", 4);
+					System.out.println("Quel matière voulez vous recevoir")
+					String tmp=sc.nextLine();
+					switch(tmp){
+					case "Bois" : recevoirRessource("Bois",1); break;
+					case "Blé" : recevoirRessource("Ble",1); break;
+					case "Laine" : recevoirRessource("Laine",1); break;
+					case "Argile" : recevoirRessource("Argile",1); break;
+					case "Minerai" : recevoirRessource("Minerai",1); break;
+					}
+				}
+				if(aux.equals("Argile")){
+					perdreRessource("Argile", 4);
+					System.out.println("Quel matière voulez vous recevoir")
+					String tmp=sc.nextLine();
+					switch(tmp){
+					case "Bois" : recevoirRessource("Bois",1); break;
+					case "Blé" : recevoirRessource("Ble",1); break;
+					case "Laine" : recevoirRessource("Laine",1); break;
+					case "Argile" : recevoirRessource("Argile",1); break;
+					case "Minerai" : recevoirRessource("Minerai",1); break;
+					}
+				}
+				if(aux.equals("Minerai")){
+					perdreRessource("Minerai", 4);
+					System.out.println("Quel matière voulez vous recevoir")
+					String tmp=sc.nextLine();
+					switch(tmp){
+					case "Bois" : recevoirRessource("Bois",1); break;
+					case "Blé" : recevoirRessource("Ble",1); break;
+					case "Laine" : recevoirRessource("Laine",1); break;
+					case "Argile" : recevoirRessource("Argile",1); break;
+					case "Minerai" : recevoirRessource("Minerai",1); break;
+					}
+				}
+			}	
+				
+			}
+			if (s.equals("3:1")){
+			
+		}
 	}
 	
 	
