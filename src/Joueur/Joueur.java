@@ -2,7 +2,7 @@ package Joueur;
 
 import java.util.LinkedList;
 
-import Jeu.CarteRessources;
+import Carte.Ressources.CarteRessources;
 import Plateau.Infrastructures.Route;
 
 public class Joueur {
@@ -13,7 +13,7 @@ public class Joueur {
     private LinkedList<Object> listeVilles;
     private LinkedList<CarteRessources> deckCarteRessources;
 
-    public Joueur(String nom, boolean ai) {
+    public Joueur(String nom, boolean ai, String couleur) {
         this.nom = nom;
         this.ai = ai;
         points = 0;

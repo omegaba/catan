@@ -1,4 +1,6 @@
-package Jeu;
+package Carte.Ressources;
+
+import Carte.Carte;
 
 public class CarteRessources extends Carte {
     private String nom;
