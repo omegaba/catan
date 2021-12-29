@@ -40,6 +40,15 @@ public class Plateau {
             listJoueurs.add(c.demanderJoueurs(i));
     }
 
+
+    public void deuxPremiersTour() {
+        
+    }
+    
+    public void tour() {
+        
+    }
+
     public Case[][] getPlateau() {
         return plateau;
     }
