@@ -10,10 +10,12 @@ public class Joueur {
     private final String nom;
     private final boolean ai;
     private int points;
+    private Communication c;
     public String couleur;
     private LinkedList<Colonie> colonie;
     private LinkedList<CarteRessources> deckCarteRessources;
-    private LInkedeList<CartesDeveloppemen> deckCarteDeveloppement;
+    private LinkedeList<CartesDeveloppemen> deckCarteDeveloppement;
+    private LinkedList<Port> port;
     
 
     Joueur(String nom, boolean ai, String couleur) {
@@ -46,63 +48,25 @@ public class Joueur {
 		return val;
 	}
 	
-	public int nbRessourceArgile(){
+	public int nbRessource(String ressource){
 	int r=0;
 		for(CartesRessource r : deckCarteRessource){
-			if(r instanceof Argile){
+			if(r instanceof ressource){
 				r+=1;
 			}
 		}
 	return r;
 	}
 	
-	public int nbRessourceBois(){
-	int r=0;
-		for(CartesRessource r : deckCarteRessource){
-			if(r instanceof Bois){
-				r+=1;
-			}
-		}
-	return r;
-	}
 	
-	public int nbRessourceLaine(){
-	int r=0;
-		for(CartesRessource r : deckCarteRessource){
-			if(r instanceof Laine){
-				r+=1;
-			}
-		}
-	return r;
-	}
-	
-	public int nbRessourceBle(){
-	int r=0;
-		for(CartesRessource r : deckCarteRessource){
-			if(r instanceof Ble){
-				r+=1;
-			}
-		}
-	return r;
-	}
-	
-	public int nbRessourceMinerai(){
-	int r=0;
-		for(CartesRessource r : deckCarteRessource){
-			if(r instanceof Minerai){
-				r+=1;
-			}
-		}
-	return r;
-	}
 	
 	
 	public void FicheCoutConstruction(){
-		int nbArgile=nbRessourceArgile();
-		int nbBois= nbRessourceBois();
-		int nbLaine=nbRessourceLaine();
-		int nbBle=nbRessourceBle();
-		int nbMinerai=nbRessourceMinerai();
+		int nbArgile=nbRessourceArgile("Argile");
+		int nbBois= nbRessourceBois("Bois");
+		int nbLaine=nbRessourceLaine("Laine");
+		int nbBle=nbRessourceBle("Ble");
+		int nbMinerai=nbRessourceMinerai("Minerai");
 		Scanner sc = new Scanner(System.in);
 		String s = sc.nextLine();
 		while(s.hasNextLine()){
@@ -135,7 +99,7 @@ public class Joueur {
 		String s = sc.nextLine();
 		while(s.hasNextLine()){
 		System.out.println("Voulez-vous construire une Route(cr), une colonie(cc), une ville'cv), faire du commerce, ou utiliser une carte développement(cd) ?");
-		s=s.nextLine();
+		s=sc.nextLine();
 		if(s.equals("cr")){
 		ConstruireRoute();
 		}
@@ -150,7 +114,7 @@ public class Joueur {
 		}
 		if(s.equals("cd")){
 			System.out.println("Voulez-vous utiliser une Carte Victoire(victory), une carte chevalier(chevalier), ou une carte Progrès(cp) ?");
-			String tmp=s.nextLine();
+			String tmp=sc.nextLine();
 			if(tmp.equals("victory")){
 			//à decider
 			}
@@ -163,7 +127,7 @@ public class Joueur {
 				switch (r){
 				case 0:  System.out.println("Vous avez tiré au sort une carte de construction de route, vous pouvez en construire 2 !!");
 				ConstruireRoute(); break;
-				case 1: System.out.println("Vous avez tiré au sort une carte invention !!");
+				case 1: System.out.println("Vous avez tiré au sort une carte invention !!"); break;
 					//a finir, il faut choisir deux ressources et les ajouter aux decks, peut-être avec une fonction qui prend en parametre une String et un entier
 				case 2: System.out.println("Vous avez tiré au sort une carte monopole !! Veuillez designer la ressource souhaitée :");
 				//a finir, avec un switch de préférence (ou pas)
@@ -179,105 +143,119 @@ public class Joueur {
 	}
 	
 	public void perdreRessource(String ressource, int n){
-	for(int i=0; i<n; i++){
-		for(CarteRessource c : deckCarteRessources){
-			if(c instanceof ressource){
-				deckCarteRessources.remove(c);
+		for(int i=0; i<n; i++){
+			for(CarteRessource c : deckCarteRessources){
+				if(c instanceof ressource){
+					deckCarteRessources.remove(c);
+				}
 			}
 		}
 	}
-	}
 	
-	
+	public boolean hasPort(){
+			return !(port.isEmpty());
+		}
+		
+		
+		
+		public void getSpecialPort(int n){
+			for(Port p : port){
+				if(p.getCase() != n){
+					System.out.println("Cette case n'est pas un port special");
+					break;
+				}
+				else{
+					int x= nbRessource(p.getRessouce());
+					if(x <2){
+						System.out.println("Le nombre de "+ p.getRessource()+" en possesion est insuffisant, il vous en faut 2 !!");
+					}
+					else{
+						System.out.println("Vous avez perdu 2 ressource de "+p.getRessource()
+						perdreRessource(p.getRessource(),2);
+						Scanner sc = new Scanner(System.in);
+						String s = sc.nextLine();
+						System.out.println("Quelle ressource souhaitez-vous en échange ?");
+						String tmp=sc.nextLine();
+						recevoirRessouce(tmp,1);
+					}
+				}
+			}
+		}
+		
+		
+		
 	public void Commercer(){
-	int nbArgile=nbRessourceArgile();
-		int nbBois= nbRessourceBois();
-		int nbLaine=nbRessourceLaine();
-		int nbBle=nbRessourceBle();
-		int nbMinerai=nbRessourceMinerai();
+		int nbArgile=nbRessourceArgile("Argile");
+		int nbBois= nbRessourceBois("Bois");
+		int nbLaine=nbRessourceLaine("Laine");
+		int nbBle=nbRessourceBle("Ble");
+		int nbMinerai=nbRessourceMinerai("Minerai");
 		Scanner sc = new Scanner(System.in);
 		String s = sc.nextLine();
-		while(s.hasNextLine()){
-			System.out.println("Choisissez un taux de change : 4:1       3:1        2:1");
-		s=sc.nextLine();
-		if(s.equals("4:1"){
-			System.out.println("Ce taux vous permet d'échanger quatre matière première identique contre une de votre choix");
-			System.out.println("Matériel en possession : Argile("+nbArgile+"), Bois("+ nbBois+"), Laine("+nbLaine+"), Blé("+nbBle+"), Minerai("+nbMinerai+")");
-			if(nbArgile<4 && nbBois <4 && nbLaine<4 && nbBle < && nbMinerai<4){
-			System.out.println("Vous n'avez pas les ressouces nécessaire");
-			}
-			else{
-				System.out.println("Quel matière voulez-vous remettre au talons ?");
-				String aux =sc.nextLine();
-				if(aux.equals("Bois")){
-					perdreRessource("Bois", 4);
-					System.out.println("Quel matière voulez vous recevoir")
-					String tmp=sc.nextLine();
-					switch(tmp){
-					case "Bois" : recevoirRessource("Bois",1); break;
-					case "Blé" : recevoirRessource("Ble",1); break;
-					case "Laine" : recevoirRessource("Laine",1); break;
-					case "Argile" : recevoirRessource("Argile",1); break;
-					case "Minerai" : recevoirRessource("Minerai",1); break;
+			while(s.hasNextLine()){
+				System.out.println("Choisissez un taux de change : 4:1       3:1        2:1");
+				s=sc.nextLine();
+				if(s.equals("4:1"){
+					System.out.println("Ce taux vous permet d'échanger quatre matière première identique contre une de votre choix");
+					System.out.println("Matériel en possession : Argile("+nbArgile+"), Bois("+ nbBois+"), Laine("+nbLaine+"), Blé("+nbBle+"), Minerai("+nbMinerai+")");
+					if(nbArgile<4 && nbBois <4 && nbLaine<4 && nbBle < && nbMinerai<4){
+						System.out.println("Vous n'avez pas les ressouces nécessaire");
 					}
-				}
-				if(aux.equals("Blé")){
-					perdreRessource("Ble", 4);
-					System.out.println("Quel matière voulez vous recevoir")
-					String tmp=sc.nextLine();
-					switch(tmp){
-					case "Bois" : recevoirRessource("Bois",1); break;
-					case "Blé" : recevoirRessource("Ble",1); break;
-					case "Laine" : recevoirRessource("Laine",1); break;
-					case "Argile" : recevoirRessource("Argile",1); break;
-					case "Minerai" : recevoirRessource("Minerai",1); break;
-					}
-				}
-				if(aux.equals("Laine")){
-					perdreRessource("Laine", 4);
-					System.out.println("Quel matière voulez vous recevoir")
-					String tmp=sc.nextLine();
-					switch(tmp){
-					case "Bois" : recevoirRessource("Bois",1); break;
-					case "Blé" : recevoirRessource("Ble",1); break;
-					case "Laine" : recevoirRessource("Laine",1); break;
-					case "Argile" : recevoirRessource("Argile",1); break;
-					case "Minerai" : recevoirRessource("Minerai",1); break;
-					}
-				}
-				if(aux.equals("Argile")){
-					perdreRessource("Argile", 4);
-					System.out.println("Quel matière voulez vous recevoir")
-					String tmp=sc.nextLine();
-					switch(tmp){
-					case "Bois" : recevoirRessource("Bois",1); break;
-					case "Blé" : recevoirRessource("Ble",1); break;
-					case "Laine" : recevoirRessource("Laine",1); break;
-					case "Argile" : recevoirRessource("Argile",1); break;
-					case "Minerai" : recevoirRessource("Minerai",1); break;
-					}
-				}
-				if(aux.equals("Minerai")){
-					perdreRessource("Minerai", 4);
-					System.out.println("Quel matière voulez vous recevoir")
-					String tmp=sc.nextLine();
-					switch(tmp){
-					case "Bois" : recevoirRessource("Bois",1); break;
-					case "Blé" : recevoirRessource("Ble",1); break;
-					case "Laine" : recevoirRessource("Laine",1); break;
-					case "Argile" : recevoirRessource("Argile",1); break;
-					case "Minerai" : recevoirRessource("Minerai",1); break;
-					}
-				}
-			}	
+					else{
+						System.out.println("Quel matière voulez-vous utiliser ?");
+						String aux =sc.nextLine();
+						if(nbRessource(aux) < 4){
+							System.out.println("Vous n'avez pas assez de "+ aux);
+						}
+						else{
+							perdreRessource(aux,4);
+							System.out.println("Quel matière voulez vous recevoir");
+							String tmp=sc.nextLine();
+							recevoirRessouce(tmp,1);
+						}
+					}	
 				
+				}
+				if (s.equals("3:1")){
+					System.out.println("Ce taux vous permet d'échanger trois matière première identiques contre une de votre choix");
+					if (!hasPort()){
+						System.out.println("Vous n'avez aucune colonie proche d'un port, vous ne pouvez pas profiter de ce taux");
+					}
+					else{
+					System.out.println("Matériel en possession : Argile("+nbArgile+"), Bois("+ nbBois+"), Laine("+nbLaine+"), Blé("+nbBle+"), Minerai("+nbMinerai+")");
+						if(nbArgile<3 && nbBois <3 && nbLaine<3 && nbBle < && nbMinerai<3){
+							System.out.println("Vous n'avez pas les ressouces nécessaire");
+						}
+						else{
+							System.out.println("Quel matière voulez-vous utiliser ?");
+							String aux =sc.nextLine();
+							if(nbRessource(aux) < 3){
+								System.out.println("Vous n'avez pas assez de "+ aux);
+							}
+							else{
+								perdreRessource(aux,3);
+								System.out.println("Quel matière voulez vous recevoir");
+								String tmp=sc.nextLine();
+								recevoirRessouce(tmp,1);
+							}
+						}
+							
+					}
+				}
+				if(s.equals("2:1")){
+				System.out.println("Ce taux vous permet d'échanger deux matière première identiques contre une de votre choix, a condition que vous soyez a proximité d'un port specialisé");
+					if (!hasSpecialPort()){
+						System.out.println("Vous n'avez aucune colonie proche d'un port spécialisé, vous ne pouvez pas profiter de ce taux");
+					}
+					else{
+						
+					System.out.println("Veuillez indiquer le numéro de case du port spécialisé que vous voulez utiliser");
+					String tmp=sc.nextLine();
+					getSpecialPort(Integer.parseInt(tmp));
+					}
+				}
 			}
-			if (s.equals("3:1")){
-			
 		}
-	}
+		
+		
 	
-	
-	
-	
-}
