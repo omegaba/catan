@@ -2,7 +2,7 @@ package Joueur;
 
 import java.util.LinkedList;
 
-import Jeu.CarteRessources;
+import Carte.Ressources.CarteRessources;
 import Plateau.Infrastructures.Route;
 import java.util.*;
 public class Joueur {
@@ -18,7 +18,7 @@ public class Joueur {
     private LinkedList<Port> port;
     
 
-    Joueur(String nom, boolean ai, String couleur) {
+    public Joueur(String nom, boolean ai, String couleur) {
         this.nom = nom;
         this.ai = ai;
         this.couleur=couleur;

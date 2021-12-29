@@ -8,10 +8,28 @@ public class Case {
     private Route nord, est, sud, ouest;
     private Object sommets;
 
-    Case(int numero, String environment, String production) {
+    public Case(int numero, String environment) {
         this.numero = numero;
         this.environment = environment;
-        this.production = production;
+        switch (environment) {
+            case "Forêt":
+                production = "Bois";
+                break;
+            case "Pré":
+                production = "Laine";
+                break;
+            case "Champs":
+                production = "Blé";
+                break;
+            case "Colline":
+                production = "Argile";
+                break;
+            case "Montagne":
+                production = "Minerai";
+                break;
+            default:
+                production = "";
+        }
     }
 
     void setRoute(String location, Route route) {
@@ -43,6 +61,10 @@ public class Case {
             default:
                 return null;
         }
+    }
+
+    public String toString() {
+        return "  " + numero + "  " + environment;
     }
 
     int getNumero() {

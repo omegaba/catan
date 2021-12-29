@@ -6,7 +6,7 @@ public class Route {
 
     private Joueur joueur;
 
-    Route(Joueur joueur) {
+    public Route(Joueur joueur) {
         this.joueur = joueur;
     }
 

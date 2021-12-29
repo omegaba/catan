@@ -1,4 +1,6 @@
-package Jeu;
+package Carte.Developpement;
+
+import Carte.Carte;
 
 public class CarteDeveloppement extends Carte {
     private String nom;

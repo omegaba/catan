@@ -1,4 +1,4 @@
-package Jeu;
+package Carte.Developpement;
 
 public class PointDeVictoire extends CarteDeveloppement {
     public PointDeVictoire() {

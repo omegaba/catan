@@ -1,4 +1,4 @@
-package Jeu;
+package Carte.Ressources;
 
 public class Laine extends CarteRessources {
     public Laine() {
