@@ -15,4 +15,12 @@ public class Port {
     public void assignerJoueur(Joueur joueur) {
         this.joueur = joueur;
     }
+
+    public String toString() {
+        return "Port normal.";
+    }
+
+    public String getRessource() {
+        return "";
+    }
 }

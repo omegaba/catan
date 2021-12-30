@@ -9,8 +9,8 @@ public class CarteDeveloppement extends Carte {
         this.nom = nom;
     }
 
-    public void affiche() {
-        System.out.println("Carte developpement :" + this.nom);
+    public String toString() {
+        return ("Carte developpement :" + this.nom);
     }
 
 }

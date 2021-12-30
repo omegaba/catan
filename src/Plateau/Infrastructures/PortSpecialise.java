@@ -11,7 +11,12 @@ public class PortSpecialise extends Port {
         this.ressource = ressource;
     }
 
+    @Override
     public String getRessource() {
         return ressource;
+    }
+
+    public String toString() {
+        return "Port spécialisé dans: " + ressource + ".";
     }
 }

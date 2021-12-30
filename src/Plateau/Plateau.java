@@ -37,15 +37,18 @@ public class Plateau {
         int nbJoueurs = c.demanderNombreJoueurs();
         listJoueurs = new LinkedList<>();
         for (int i = 0; i < nbJoueurs; i++)
-            listJoueurs.add(c.demanderJoueurs(i));
+            listJoueurs.add(c.demanderJoueurs(i,this));
     }
-
 
     public void deuxPremiersTour() {
-        
+
     }
-    
+
     public void tour() {
+
+    }
+
+    public void repartionRessource(int resultatDe) {
         
     }
 
