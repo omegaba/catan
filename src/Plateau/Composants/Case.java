@@ -1,5 +1,7 @@
 package Plateau.Composants;
 
+import java.util.HashMap;
+
 import Plateau.Infrastructures.Port;
 import Plateau.Infrastructures.Route;
 
@@ -9,6 +11,7 @@ public class Case {
     private Route nord, est, sud, ouest;
     private Object sommets;
     private Port port;
+    private HashMap<String, Case> caseAdja = new HashMap<>();
 
     public Case(int numero, String environment) {
         this.numero = numero;
@@ -72,6 +75,10 @@ public class Case {
 
     public String toString() {
         return "  " + numero + "  " + environment;
+    }
+
+    public HashMap<String, Case> getMap() {
+        return caseAdja;
     }
 
     int getNumero() {
