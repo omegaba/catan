@@ -21,6 +21,7 @@ public class Joueur {
 	private LinkedList<CarteDeveloppement> deckCarteDeveloppement;
 	private LinkedList<Port> port;
 	private Plateau plateau;
+	private int nbColonies, nbVilles, nbRoutes;
 
 	public Joueur(String nom, boolean ai, String couleur, Plateau p) {
 		this.nom = nom;
@@ -30,19 +31,15 @@ public class Joueur {
 		deckCarteRessources = new LinkedList<>();
 		deckCarteDeveloppement = new LinkedList<>();
 		this.plateau = p;
+		nbColonies = 5;
+		nbVilles = 4;
+		nbRoutes = 15;
 	}
 
 	public void affiche() {
 		System.out.println("Nom :" + this.nom + ", couleur " + this.couleur);
 		System.out.println("Nombre de point : " + this.points);
 		System.out.print("Cartes développement: ");
-		for (CarteDeveloppement c : deckCarteDeveloppement) {
-			c.affiche();
-		}
-		System.out.println("Cartes Ressources: ");
-		for (CarteRessources r : deckCarteRessources) {
-			r.affiche();
-		}
 	}
 
 	public int LancerDe() {
@@ -284,6 +281,10 @@ public class Joueur {
 				}
 			}
 		}
+	}
+
+	public int getPoints() {
+		return points;
 	}
 
 }

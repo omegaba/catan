@@ -17,6 +17,11 @@ public class Launcher {
         Plateau p = new Plateau();
         AffichageText a = new AffichageText(p);
         a.affiche();
+        p.deuxPremiersTour(a);
+        while (!p.partiFini()) {
+            a.affiche();
+            p.tour();
+        }
     }
 
     static void jeuGraph() {

@@ -1,5 +1,6 @@
 package Plateau.Composants;
 
+import Plateau.Infrastructures.Port;
 import Plateau.Infrastructures.Route;
 
 public class Case {
@@ -7,6 +8,7 @@ public class Case {
     private final String environment, production;
     private Route nord, est, sud, ouest;
     private Object sommets;
+    private Port port;
 
     public Case(int numero, String environment) {
         this.numero = numero;
@@ -30,6 +32,11 @@ public class Case {
             default:
                 production = "";
         }
+        port = null;
+    }
+
+    public void setPort(Port port) {
+        this.port = port;
     }
 
     void setRoute(String location, Route route) {
