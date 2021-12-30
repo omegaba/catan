@@ -4,6 +4,7 @@ import Carte.Developpement.CarteDeveloppement;
 import Carte.Ressources.CarteRessources;
 import Jeu.Communication;
 import Plateau.Plateau;
+import Plateau.Infrastructures.Colonie;
 import Plateau.Infrastructures.Port;
 import Plateau.Infrastructures.PortSpecialise;
 import Plateau.Infrastructures.Route;
