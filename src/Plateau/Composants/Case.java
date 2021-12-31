@@ -2,6 +2,7 @@ package Plateau.Composants;
 
 import java.util.HashMap;
 
+import Plateau.Infrastructures.Colonie;
 import Plateau.Infrastructures.Port;
 import Plateau.Infrastructures.Route;
 import Plateau.Infrastructure.Colonie;
@@ -85,23 +86,27 @@ public class Case {
     }
 
     public String toString() {
-        return "  " + numero + "  " + environment;
+        return "  " + numero + "  " + environment.substring(0, 2);
     }
 
     public HashMap<String, Case> getMap() {
         return caseAdja;
     }
 
-    int getNumero() {
+    public int getNumero() {
         return numero;
     }
 
-    String getEnvironment() {
+    public String getEnvironment() {
         return environment;
     }
 
-    String getProduction() {
+    public String getRessource() {
         return production;
+    }
+
+    public HashMap<String, Colonie> getColonie() {
+        return this.MapColonie;
     }
     
     public boolean hasColonie(){
@@ -110,13 +115,5 @@ public class Case {
     	}
     	return false;
     }
-    
-   HashMap getMapColonie(){
-   	return this.MapColonie;
-   }
-   
-   
-   
-    
-    
+
 }

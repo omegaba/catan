@@ -18,7 +18,7 @@ public class Launcher {
         AffichageText a = new AffichageText(p);
         a.affiche();
         p.deuxPremiersTour(a);
-        while (!p.partiFini()) {
+        while (!p.getPartiFini()) {
             a.affiche();
             p.tour();
         }

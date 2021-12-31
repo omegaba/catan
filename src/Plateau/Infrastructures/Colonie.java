@@ -5,7 +5,7 @@ import Plateau.Plateau;
 import Plateau.Composants.Case;
 
 import java.util.LinkedList;
-import java.util.Scanner;
+import Jeu.Communication;
 
 public class Colonie {
 	private Joueur joueur;
@@ -13,6 +13,7 @@ public class Colonie {
 	private int nbrRessource;
 	private HashMap<String, Case> case_adja;
 	private boolean isVille;
+	private Communication c;
 
 	public Colonie(Joueur j, boolean isVille, Plateau p) {
 		this.joueur = j;
@@ -33,10 +34,7 @@ public class Colonie {
 	}
 
 	public void placer() {
-		Scanner sc = new Scanner(System.in);
-		String s = sc.nextLine();
-		System.out.println("Où voulez-vous placer votre colonie");
-		String CaseLocation = sc.nextLine();
+		String CaseLocation = c.choixPlacementColonie();
 		String[] tab = decoupe(CaseLocation);
 		int i = Integer.parseInt(tab[0]);
 		int j = Integer.parseInt(tab[1]);
@@ -98,6 +96,7 @@ public class Colonie {
 					setMapColonie();
 					this.case_adja=map;
 				}
+
 		}
 	
 	/*public boolean hasColonie(String str){
@@ -171,5 +170,9 @@ public class Colonie {
 	" Située entre "+ adjacents;
 	}
 	
+
+	public int getNbrRessource() {
+		return this.nbrRessource;
+	}
 
 }

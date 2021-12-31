@@ -1,7 +1,14 @@
 package Joueur;
 
 import Carte.Developpement.CarteDeveloppement;
+import Carte.Developpement.Chevalier;
+import Carte.Developpement.PointDeVictoire;
+import Carte.Developpement.Progres.Progres;
+import Carte.Developpement.Progres.ProgresInvention;
+import Carte.Developpement.Progres.ProgresMonopole;
+import Carte.Developpement.Progres.ProgresRoute;
 import Carte.Ressources.CarteRessources;
+import Carte.Speciale.CarteSpeciale;
 import Jeu.Communication;
 import Plateau.Plateau;
 import Plateau.Infrastructures.Colonie;
@@ -20,9 +27,11 @@ public class Joueur {
 	private LinkedList<Colonie> colonie;
 	private LinkedList<CarteRessources> deckCarteRessources;
 	private LinkedList<CarteDeveloppement> deckCarteDeveloppement;
+	private LinkedList<CarteSpeciale> deckCarteSpeciale;
 	private LinkedList<Port> port;
 	private Plateau plateau;
 	private int nbColonies, nbVilles, nbRoutes;
+	private int nbChevalierJouer;
 
 	public Joueur(String nom, boolean ai, String couleur, Plateau p) {
 		this.nom = nom;
@@ -31,10 +40,12 @@ public class Joueur {
 		points = 0;
 		deckCarteRessources = new LinkedList<>();
 		deckCarteDeveloppement = new LinkedList<>();
+		deckCarteSpeciale = new LinkedList<>();
 		this.plateau = p;
 		nbColonies = 5;
 		nbVilles = 4;
 		nbRoutes = 15;
+		nbChevalierJouer = 0;
 	}
 
 	public void affiche() {
@@ -75,7 +86,9 @@ public class Joueur {
 	}
 
 	private void jouerCarteDeveloppement() {
-		if (carteDev) {
+		if (deckCarteDeveloppement.isEmpty()) {
+			System.out.println("Vous n'avez pas de carte de développement");
+		} else if (carteDev) {
 			StringBuilder sb = new StringBuilder();
 			for (CarteDeveloppement c : deckCarteDeveloppement)
 				sb.append(c + " ");
@@ -83,6 +96,89 @@ public class Joueur {
 			String dev = c.choixAction("Voulez-vous jouer une carte développement ?");
 			if (dev.equals("oui"))
 				utiliserCarteDevelopment();
+		}
+	}
+
+	private void utiliserCarteDevelopment() {
+		boolean hasChevalier = false;
+		boolean hasProgres = false;
+		for (CarteDeveloppement cd : deckCarteDeveloppement) {
+			if (cd instanceof Chevalier)
+				hasChevalier = true;
+			if (cd instanceof Progres)
+				hasProgres = true;
+		}
+		String carteJouer = "";
+		if (hasChevalier && hasProgres)
+			carteJouer = c.choixCarteDeveloppement("Voulez-vous jouer une carte Chevalier ou une carte Progres ?");
+		else if (hasChevalier)
+			carteJouer = "chevalier";
+		else if (hasProgres)
+			carteJouer = "progres";
+
+		switch (carteJouer) {
+			case "chevalier":
+				for (CarteDeveloppement cd : deckCarteDeveloppement) {
+					if (cd instanceof Chevalier) {
+						((Chevalier) cd).jouerChevalier();
+						deckCarteDeveloppement.remove(cd);
+						break;
+					}
+				}
+				break;
+			case "progres":
+				for (CarteDeveloppement cd : deckCarteDeveloppement) {
+					StringBuilder sb = new StringBuilder();
+					if (cd instanceof Progres) {
+						sb.append(cd);
+					}
+					System.out.println("Voici la liste de vos cartes proges: " + sb.toString());
+					String carteProgres = c.choixCarteProgres();
+					switch (carteProgres) {
+						case "invention":
+							for (CarteDeveloppement cp : deckCarteDeveloppement) {
+								if (cp instanceof ProgresInvention) {
+									((ProgresInvention) cp).pioche();
+									deckCarteDeveloppement.remove(cp);
+									break;
+								}
+							}
+							break;
+						case "monopole":
+							for (CarteDeveloppement cp : deckCarteDeveloppement) {
+								if (cp instanceof ProgresMonopole) {
+									((ProgresMonopole) cp).monopole();
+									deckCarteDeveloppement.remove(cp);
+									break;
+								}
+							}
+							break;
+						case "route":
+							for (CarteDeveloppement cp : deckCarteDeveloppement) {
+								if (cp instanceof ProgresRoute) {
+									((ProgresRoute) cp).construireRoute();
+									deckCarteDeveloppement.remove(cp);
+									break;
+								}
+							}
+							break;
+					}
+				}
+				break;
+		}
+	}
+
+	private void achatCarteDeveloppement() {
+		if (!plateau.getPileCarteDeveloppement().isEmpty()) {
+			CarteDeveloppement cd = plateau.getPileCarteDeveloppement().removeFirst();
+			System.out.println("Vous avez obtenu: " + cd);
+			cd.setJoueur(this);
+			deckCarteDeveloppement.add(cd);
+			perdreRessource("minerai", 1);
+			perdreRessource("laine", 1);
+			perdreRessource("blé", 1);
+		} else {
+			System.out.println("Il n'y a plus de carte développement disponible");
 		}
 	}
 
@@ -96,7 +192,7 @@ public class Joueur {
 		jouerCarteDeveloppement();
 
 		int resultatDe = LancerDe();
-		plateau.repartionRessource(resultatDe);
+		plateau.repartirRessource(resultatDe);
 
 		jouerCarteDeveloppement();
 
@@ -105,12 +201,12 @@ public class Joueur {
 		String commerce;
 		if (!hasPort()) {
 			commerce = c.choixAction(
-					"Vous n'avez pas de port donc le taux pour le commerce est de 4:1. Voulez-vous faire du commerce ?");
+					"Vous n'avez pas de port donc le taux pour le commerce est de 4:1. Voulez-vous faire du commerce ? Vous pouvez écrire stop pour arreter l'échange.");
 			if (commerce.equals("oui"))
 				commerce("4:1");
 		} else if (!hasSpecialPort()) {
 			commerce = c.choixAction(
-					"Vous avez juste un/des ports normaux donc le taux pour le commerce est de 3:1. Voulez-vous faire du commerce ?");
+					"Vous avez juste un/des ports normaux donc le taux pour le commerce est de 3:1. Voulez-vous faire du commerce ? Vous pouvez écrire stop pour arreter l'échange.");
 			if (commerce.equals("oui"))
 				commerce("3:1");
 		} else {
@@ -124,11 +220,13 @@ public class Joueur {
 			if (portNormal)
 				commerce = c.choixAction(
 						"Vous avez un/des ports normaux, donc avec un taux de 3:1. Et vous avez aussi avec un taux de 2:1 un/des port(s) spécialisé(s) présent dans la liste suivante:\n"
-								+ sb.toString() + "\nVoulez-vous faire du commerce ?");
+								+ sb.toString()
+								+ "\nVoulez-vous faire du commerce ? Vous pouvez écrire stop pour arreter l'échange.");
 			else
 				commerce = c.choixAction(
 						"Vous un/des port(s) spécialisé qui ont un taux de 2:1 et qui sont dans la liste suivante:\n"
-								+ sb.toString() + "\nVoulez-vous faire du commerce ?");
+								+ sb.toString()
+								+ "\nVoulez-vous faire du commerce ? Vous pouvez écrire stop pour arreter l'échange.");
 			if (commerce.equals("oui"))
 				commerce("2:1");
 		}
@@ -156,7 +254,6 @@ public class Joueur {
 					break;
 			}
 		}
-
 		jouerCarteDeveloppement();
 	}
 	
@@ -248,7 +345,7 @@ public class Joueur {
 
 	public void recevoirRessource(String ressource, int n) {
 		for (int i = 0; i < n; i++) {
-			deckCarteRessources.add(new CarteRessources(ressource));
+			deckCarteRessources.add(new CarteRessources(ressource, this));
 		}
 	}
 
@@ -354,11 +451,12 @@ public class Joueur {
 							if (nbRessource(ressource) < 3) {
 								System.out.println("Vous n'avez pas assez de " + ressource);
 							} else {
-								perdreRessource(ressource, 3);
+								String ressourcePerdu = ressource;
 								ressource = c.choixRessource("Quel matière voulez vous recevoir");
 								if (ressource.equals("stop"))
 									echangeEnCour = false;
 								else {
+									perdreRessource(ressourcePerdu, 3);
 									recevoirRessource(ressource, 1);
 									echangeEnCour = false;
 								}
@@ -370,9 +468,30 @@ public class Joueur {
 		}
 	}
 
+	public void calculPoints() {
+		points = 0;
+		for (Colonie c : colonie) {
+			if (c.getIsVille())
+				points += 2;
+			else
+				points += 1;
+		}
+		for (CarteDeveloppement cd : deckCarteDeveloppement) {
+			if (cd instanceof PointDeVictoire)
+				points += 1;
+		}
+		for (CarteSpeciale cs : deckCarteSpeciale) {
+			points += 2;
+		}
+	}
+
 	public int getPoints() {
 		return points;
 	}
 	
+
+	public LinkedList<CarteRessources> getDeckCarteRessources() {
+		return deckCarteRessources;
+	}
 
 }

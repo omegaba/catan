@@ -1,7 +1,9 @@
 package Carte.Ressources;
 
+import Joueur.Joueur;
+
 public class Minerai extends CarteRessources {
-    public Minerai() {
-        super("Minerai");
+    public Minerai(Joueur j) {
+        super("Minerai", j);
     }
 }

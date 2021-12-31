@@ -1,7 +1,13 @@
 package Carte.Developpement;
 
+import Joueur.Joueur;
+
 public class Chevalier extends CarteDeveloppement {
-    public Chevalier() {
-        super("Chevalier");
+    public Chevalier(Joueur j) {
+        super("Chevalier", j);
+    }
+
+    public void jouerChevalier() {
+        // deplacer voleur
     }
 }

@@ -1,7 +1,9 @@
 package Carte.Ressources;
 
+import Joueur.Joueur;
+
 public class Ble extends CarteRessources {
-    public Ble() {
-        super("Blé");
+    public Ble(Joueur j) {
+        super("Blé",j);
     }
 }
