@@ -212,11 +212,13 @@ public class Joueur {
 				perdreRessource("Ble",1);
 				Colonie c=new Colonie(this.joueur, false, this.plateau);
 				c.placer();
-				this.points+=1;
 				this.colonie.add(c);
 				
 			}
 		 
+	}
+	
+	public void listColonie(){
 	}
 	public void construireVille(){
 		Scanner sc = new Scanner(System.in);

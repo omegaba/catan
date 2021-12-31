@@ -12,9 +12,10 @@ public class Case {
     private Route nord, est, sud, ouest;
     private Object sommets;
     private Port port;
-    private HashMap<String, Case> caseAdja = new HashMap<>();
-    private Colonie colonie;
-
+    private HashMap<String, Case> case_Adja = new HashMap<>();
+    private HashMap<String, Colonie> MapColonie= new HashMap<>();
+    
+    
     public Case(int numero, String environment) {
         this.numero = numero;
         this.environment = environment;
@@ -110,7 +111,9 @@ public class Case {
     	return false;
     }
     
-    Colonie setColonie(Colonie c){
-    	this.colonie=c;
-    }
+   HashMap getMapColonie(){
+   	return this.MapColonie;
+   }
+    
+    
 }

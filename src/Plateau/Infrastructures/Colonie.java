@@ -11,7 +11,7 @@ public class Colonie {
 	private Joueur joueur;
 	private Plateau plateau;
 	private int nbrRessource;
-	private LinkedList<Case> case_adja;
+	private HashMap<String, Case> case_adja;
 	private boolean isVille;
 
 	public Colonie(Joueur j, boolean isVille, Plateau p) {
@@ -41,30 +41,50 @@ public class Colonie {
 		int i = Integer.parseInt(tab[0]);
 		int j = Integer.parseInt(tab[1]);
 		Case c = plateau[i][j];
-		if(!c.estEmplacementLibre()){
-			System.out.println("Cet emplacement est déjà occupé");
-			//faire en sorte que le joueur puisse choisir un autre emplacement;
-		}
-		else{
 			System.out.println(
 				"Dans quelle partie de la case voulez-vous placer votre colonie ?  haut gauche ?  bas gauche ? haut droit ? bas droit ?");
-			String location = sc.nextLine();
-			String[] decoupe = decoupe(location);
-			String locationHorizontale = decoupe[0];
-			String locationVerticale = decoupe[1];
-			LinkedList<Case> list = new LinkedList<>();
-				for (var v : c.getMap().entrySet()) {
-					if (v.getKey().equals(location) || v.getKey().equals(locationHorizontale)
-						|| v.getKey().equals(locationVerticale)) {
-						list.add(v.getValue());
-					}
+				if(!c.estEmplacementLibre()){
+					System.out.println("Cet emplacement est déjà occupé");
+					//faire en sorte que le joueur puisse choisir un autre emplacement;
 				}
-				plateau[i][j].setColonie(this);
-				this.case_adja = list;
+				
+				else{
+					String location = sc.nextLine();
+					String[] decoupe = decoupe(location);
+					String locationHorizontale = decoupe[0];
+					String locationVerticale = decoupe[1];
+					HashMap<String, Case> map=new HashMap();
+						for (var v : c.getMap().entrySet()) {
+							if(v.getKey().equals(location)){
+								.put(location,v.getValue());
+							}
+							if(v.getKey().equals(locationHorizontale)){
+								map.put(locationHorizontale,v.getValue());
+							}
+							if(v.getKey().equals(locationVerticale)){
+								map.put(locationVerticale,v.getValue());
+							}
+						}
+				
+						if(locationHorizontale.equals("haut") && locationVerticale.equals("gauche")){
+							map.put("bas droit");
+						}
+						if(locationHorizontale.equals("bas") && locationVerticale.equals("gauche")){
+							map.put("haut droit");
+						}
+						if(locationHorizontale.equals("haut") && locationVerticale.equals("droit")){
+							map.put("bas gauche");
+						}
+						if(locationHorizontale.equals("bas") && locationVerticale.equals("droit")){
+							map.put("haut gauche");
+						}
+				
+					setMapColonie(i,j, location);
+					this.case_adja=map;
+				}
 		}
-	}
 	
-	public boolean hasColonie(String str){
+	/*public boolean hasColonie(String str){
 		String[] decoupe =decoupe(str);
 		int i=Integer.parseInt(decoupe[0]);
 		int j=Integer.parseInt(decoupe[1]);
@@ -79,6 +99,77 @@ public class Colonie {
 		int i=Integer.parseInt(decoupe[0]);
 		int j=Integer.parseInt(decoupe[1]);
 			plateau[i][j].setColonie(c);
+	}*/
+	
+	public void setMapColonie(int x, int y, String location){
+		Case c= plateau[x][y];
+			for( var v : case_adja.entrySet()){
+				if(location.equals("bas gauche"){
+					switch(v.getKey()){
+						case "gauche":
+							v.getValue().getMapColonie().put("bas droit", this);
+							break;
+						case "bas":
+							v.getValue().getMapColonie().put("haut gauche", this);
+							break;
+						case "bas gauche":
+							v.getValue().getMapColonie().put("haut droit", this);
+							break;
+						
+						case "haut droit":
+							v.getValue().getMapColonie().put("bas gauche", this);
+							break;
+					}
+				}
+				if(location.equals("bas droit"){
+					switch(v.getKey()){
+						case "droit":
+							v.getValue().getMapColonie().put("bas gauche", this);
+							break;
+						case "bas":
+							v.getValue().getMapColonie().put("haut droit", this);
+							break;
+						case "bas droit":
+							v.getValue().getMapColonie().put("haut gauche", this);
+							break;
+						case "haut gauche":
+							v.getValue().getMapColonie().put("bas droit", this);
+							break;
+					}
+				}
+				if(location.equals("haut droit"){
+					switch(v.getKey()){
+						case "haut":
+							v.getValue().getMapColonie().put("bas droit", this);
+							break;
+						case "droit":
+							v.getValue().getMapColonie().put("haut gauche", this);
+							break;
+						case "haut droit":
+							v.getValue().getMapColonie().put("bas gauche", this);
+							break;
+						case "bas gauche":
+							v.getValue().getMapColonie().put("haut droit", this);
+							break;
+					}
+				}
+				if(location.equals("haut gauche"){
+					switch(v.getKey()){
+						case "haut":
+							v.getValue().getMapColonie().put("bas gauche", this);
+							break;
+						case "gauche":
+							v.getValue().getMapColonie().put("haut droit", this);
+							break;
+						case "haut gauche":
+							v.getValue().getMapColonie().put("bas droit", this);
+							break;
+						case "bas droit":
+							v.getValue().getMapColonie().put("haut gauche", this);
+							break;
+					}
+				}
+			}
 	}
 
 	public Joueur getJoueur() {
