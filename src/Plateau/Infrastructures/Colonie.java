@@ -40,21 +40,45 @@ public class Colonie {
 		String[] tab = decoupe(CaseLocation);
 		int i = Integer.parseInt(tab[0]);
 		int j = Integer.parseInt(tab[1]);
-		System.out.println(
-				"Dans quelle partie de la case voulez-vous placer votre colonie ?  haut gauche ?  bas gauche ? haut droit ? bas droit ?");
-		String location = sc.nextLine();
-		String[] decoupe = decoupe(location);
-		String locationHorizontale = decoupe[0];
-		String locationVerticale = decoupe[1];
-		LinkedList<Case> list = new LinkedList<>();
-		Case c = plateau.getPlateau()[i][j];
-		for (var v : c.getMap().entrySet()) {
-			if (v.getKey().equals(location) || v.getKey().equals(locationHorizontale)
-					|| v.getKey().equals(locationVerticale)) {
-				list.add(v.getValue());
-			}
+		Case c = plateau[i][j];
+		if(!c.estEmplacementLibre()){
+			System.out.println("Cet emplacement est déjà occupé");
+			//faire en sorte que le joueur puisse choisir un autre emplacement;
 		}
-		this.case_adja = list;
+		else{
+			System.out.println(
+				"Dans quelle partie de la case voulez-vous placer votre colonie ?  haut gauche ?  bas gauche ? haut droit ? bas droit ?");
+			String location = sc.nextLine();
+			String[] decoupe = decoupe(location);
+			String locationHorizontale = decoupe[0];
+			String locationVerticale = decoupe[1];
+			LinkedList<Case> list = new LinkedList<>();
+				for (var v : c.getMap().entrySet()) {
+					if (v.getKey().equals(location) || v.getKey().equals(locationHorizontale)
+						|| v.getKey().equals(locationVerticale)) {
+						list.add(v.getValue());
+					}
+				}
+				plateau[i][j].setColonie(this);
+				this.case_adja = list;
+		}
+	}
+	
+	public boolean hasColonie(String str){
+		String[] decoupe =decoupe(str);
+		int i=Integer.parseInt(decoupe[0]);
+		int j=Integer.parseInt(decoupe[1]);
+			if(!plateau[i][j].hasColonie()){
+				return false;
+			}
+		return true;
+	}
+	
+	public void remplaceColonie(String location, Colonie c){
+		String[] decoupe =decoupe(str);
+		int i=Integer.parseInt(decoupe[0]);
+		int j=Integer.parseInt(decoupe[1]);
+			plateau[i][j].setColonie(c);
 	}
 
 	public Joueur getJoueur() {

@@ -159,6 +159,93 @@ public class Joueur {
 
 		jouerCarteDeveloppement();
 	}
+	
+	
+	public boolean aRessource(int t){
+		int nbArgile = nbRessource("Argile");
+		int nbBois = nbRessource("Bois");
+		int nbLaine = nbRessource("Laine");
+		int nbBle = nbRessource("Ble");
+		if(nbArgile < t && nbBois < t && nbLaine < t && nbBle < t && nbMinerai < t){
+			return false;
+		}
+		return true;
+	}
+	
+	public boolean aRessource(String str){
+		int nbArgile = nbRessource("Argile");
+		int nbBois = nbRessource("Bois");
+		int nbLaine = nbRessource("Laine");
+		int nbBle = nbRessource("Ble");
+		int nbMinerai=nbRessource("Minerai");
+		switch(str){
+			case "colonie":
+				if(nbArgile < 1 && nbBois < 1 && nbLaine < 1 && nbBle < 1){
+					return false;
+				}
+			case "ville": 
+				if(nbMinerai <3 &&  nbBle <2){
+					return false;
+				}
+			case "route":
+				if(nbArgile <1 && nbBois<1){
+					return false;
+				}
+		}
+		return true;
+	}
+	
+	
+	public void construireColonie(){
+		int nbArgile = nbRessource("Argile");
+		int nbBois = nbRessource("Bois");
+		int nbLaine = nbRessource("Laine");
+		int nbBle = nbRessource("Ble");
+		System.out.println("Matériaux utilisés pour la construction: Argile(1) , Bois(1), Laine(1), Blé(1)\n");
+			if(!aRessource("colonie"){
+				System.out.println("Vous n'avez pas les ressource necéssaires pour construire une colonie");
+			}
+			else{
+				perdreRessource("Argile",1);
+				perdreRessource("Bois",1);
+				perdreRessource("Laine",1);
+				perdreRessource("Ble",1);
+				Colonie c=new Colonie(this.joueur, false, this.plateau);
+				c.placer();
+				this.points+=1;
+				this.colonie.add(c);
+				
+			}
+		 
+	}
+	public void construireVille(){
+		Scanner sc = new Scanner(System.in);
+		String s = sc.nextLine();
+		System.out.println("Choisissez une colonie à transformer en ville");
+		String location=sc.nextLine();  // il y aura des coordonnées de case dans la string
+		Colonie c=new Colonie(this.joueur, false, this.plateau);
+			if(!c.hasColonie(location)){
+				System.out.println("Cette case n'est pas une colonie"); //faire en sorte que le joueur puisse rechoisir une case
+			}
+			else {
+				System.out.println("Matériaux utilisés pour la construction: Minerai(3), Blé(2)\n");
+					if(!aRessource("ville"){
+						System.out.println("Vous n'avez pas les ressource necéssaires pour construire une ville");
+					}
+					else{
+						perdreRessource("Minerai",3);
+						perdreRessource("Ble",2);
+						c.upgrade();
+						c.remplaceColony(location, c);
+						//finir, remplacer la colonie d'vant par cette ville
+					}
+			}
+	}
+	
+	
+	
+	
+	
 
 	public void recevoirRessource(String ressource, int n) {
 		for (int i = 0; i < n; i++) {
@@ -200,7 +287,7 @@ public class Joueur {
 		if (taux.equals("4:1") || taux.equals("3:1")) {
 			System.out.println(
 					"Ce taux vous permet d'échanger" + t + " matière première identique contre une de votre choix");
-			if (nbArgile < t && nbBois < t && nbLaine < t && nbBle < t && nbMinerai < t) {
+			if (!aRessource(t)) {
 				System.out.println("Vous n'avez pas les ressouces nécessaire");
 			} else {
 				while (echangeEnCour) {
@@ -233,7 +320,7 @@ public class Joueur {
 			int choixPort = c.choixPort(i);
 			Port portChoisi = port.get(choixPort);
 			if (portChoisi instanceof PortSpecialise) {
-				if (nbArgile < 2 && nbBois < 2 && nbLaine < 2 && nbBle < 2 && nbMinerai < 2) {
+				if (!aRessource(2)) {
 					System.out.println("Vous n'avez pas les ressouces nécessaire");
 				} else {
 					while (echangeEnCour) {
@@ -257,7 +344,7 @@ public class Joueur {
 					}
 				}
 			} else {
-				if (nbArgile < 3 && nbBois < 3 && nbLaine < 3 && nbBle < 3 && nbMinerai < 3) {
+				if (!aRessource(3)) {
 					System.out.println("Vous n'avez pas les ressouces nécessaire");
 				} else {
 					while (echangeEnCour) {

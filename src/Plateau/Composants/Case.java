@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import Plateau.Infrastructures.Port;
 import Plateau.Infrastructures.Route;
+import Plateau.Infrastructure.Colonie;
 
 public class Case {
     private final int numero;
@@ -12,6 +13,7 @@ public class Case {
     private Object sommets;
     private Port port;
     private HashMap<String, Case> caseAdja = new HashMap<>();
+    private Colonie colonie;
 
     public Case(int numero, String environment) {
         this.numero = numero;
@@ -26,7 +28,7 @@ public class Case {
             case "Champs":
                 production = "Blé";
                 break;
-            case "Colline":
+            case "Coline":
                 production = "Argile";
                 break;
             case "Montagne":
@@ -36,6 +38,7 @@ public class Case {
                 production = "";
         }
         port = null;
+        colonie=null;
     }
 
     public void setPort(Port port) {
@@ -72,6 +75,13 @@ public class Case {
                 return null;
         }
     }
+    
+    public boolean estEmplacementLibre(){
+    	if(this.colonie==null && pretDeRouteAlie() && deuxColonieDedistance()){  //pretDeRouteAlie() : methode qui check si on est pret d'une route aliée
+    		return true;
+    	}
+    	return false;
+    }
 
     public String toString() {
         return "  " + numero + "  " + environment;
@@ -91,5 +101,16 @@ public class Case {
 
     String getProduction() {
         return production;
+    }
+    
+    public boolean hasColonie(){
+    	if(this.colonie !=null){
+    		return true;
+    	}
+    	return false;
+    }
+    
+    Colonie setColonie(Colonie c){
+    	this.colonie=c;
     }
 }
