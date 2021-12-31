@@ -174,6 +174,9 @@ public class Joueur {
 			System.out.println("Vous avez obtenu: " + cd);
 			cd.setJoueur(this);
 			deckCarteDeveloppement.add(cd);
+			perdreRessource("minerai", 1);
+			perdreRessource("laine", 1);
+			perdreRessource("blé", 1);
 		} else {
 			System.out.println("Il n'y a plus de carte développement disponible");
 		}
