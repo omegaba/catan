@@ -15,4 +15,8 @@ public class CarteDeveloppement extends Carte {
         return ("Carte developpement :" + this.nom);
     }
 
+    public void setJoueur(Joueur j) {
+        joueur = j;
+    }
+
 }

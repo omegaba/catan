@@ -172,6 +172,7 @@ public class Joueur {
 		if (!plateau.getPileCarteDeveloppement().isEmpty()) {
 			CarteDeveloppement cd = plateau.getPileCarteDeveloppement().removeFirst();
 			System.out.println("Vous avez obtenu: " + cd);
+			cd.setJoueur(this);
 			deckCarteDeveloppement.add(cd);
 		} else {
 			System.out.println("Il n'y a plus de carte développement disponible");
