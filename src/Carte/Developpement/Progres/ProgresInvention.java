@@ -4,8 +4,8 @@ import Jeu.Communication;
 import Joueur.Joueur;
 
 public class ProgresInvention extends Progres {
-    public ProgresInvention(String nom, Joueur j) {
-        super(nom, j);
+    public ProgresInvention(Joueur j) {
+        super("Invention", j);
         // TODO Auto-generated constructor stub
     }
 

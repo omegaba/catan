@@ -9,13 +9,13 @@ public class ProgresMonopole extends Progres {
 
     private Plateau p;
 
-    public ProgresMonopole(String nom, Joueur j, Plateau p) {
-        super(nom, j);
+    public ProgresMonopole(Joueur j, Plateau p) {
+        super("Monopole", j);
         this.p = p;
         // TODO Auto-generated constructor stub
     }
 
-    void monopole() {
+    public void monopole() {
         Communication c = new Communication();
         String ressource = c.choixRessource("Quel ressource voulez-vous obtenir ?");
         for (Joueur j : p.getListJoueurs()) {

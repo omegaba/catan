@@ -1,10 +1,17 @@
 package Plateau;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Random;
 
+import Carte.Developpement.CarteDeveloppement;
+import Carte.Developpement.Chevalier;
+import Carte.Developpement.PointDeVictoire;
+import Carte.Developpement.Progres.ProgresInvention;
+import Carte.Developpement.Progres.ProgresMonopole;
+import Carte.Developpement.Progres.ProgresRoute;
 import Jeu.AffichageText;
 import Jeu.Communication;
 import Joueur.Joueur;
@@ -20,6 +27,7 @@ public class Plateau {
     private LinkedList<Joueur> listJoueurs;
     private int numeroJoueurActuel;
     private boolean partiFini;
+    private LinkedList<CarteDeveloppement> pileCarteDeveloppement;
 
     public Plateau() {
         int nbPortNormal = 3;
@@ -145,6 +153,25 @@ public class Plateau {
 
         numeroJoueurActuel = 0;
         partiFini = false;
+
+        pileCarteDeveloppement = new LinkedList<>();
+        for (int i = 0; i < 5; i++) {
+            pileCarteDeveloppement.add(new PointDeVictoire(null));
+        }
+        for (int i = 0; i < 3; i++) {
+            pileCarteDeveloppement.add(new ProgresRoute(null));
+        }
+        for (int i = 0; i < 3; i++) {
+            pileCarteDeveloppement.add(new ProgresMonopole(null, this));
+        }
+        for (int i = 0; i < 3; i++) {
+            pileCarteDeveloppement.add(new ProgresInvention(null));
+        }
+        for (int i = 0; i < 11; i++) {
+            pileCarteDeveloppement.add(new Chevalier(null));
+        }
+
+        Collections.shuffle(pileCarteDeveloppement);
     }
 
     public void deuxPremiersTour(AffichageText a) {
@@ -199,6 +226,10 @@ public class Plateau {
 
     public LinkedList<Joueur> getListJoueurs() {
         return listJoueurs;
+    }
+
+    public LinkedList<CarteDeveloppement> getPileCarteDeveloppement() {
+        return pileCarteDeveloppement;
     }
 
 }

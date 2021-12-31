@@ -116,4 +116,22 @@ public class Communication {
         return rep;
     }
 
+    public String choixCarteDeveloppement(String cartePossible) {
+        System.out.println(cartePossible);
+        String rep;
+        do {
+            rep = sc.nextLine().toLowerCase().replaceAll("\\s+", " ").strip();
+        } while (!rep.equals("chevalier") && !rep.equals("progres"));
+        return rep;
+    }
+
+    public String choixCarteProgres() {
+        System.out.println("Quel carte progres voulez-vous jouer ?");
+        String rep;
+        do {
+            rep = sc.nextLine().toLowerCase().replaceAll("\\s+", " ").strip();
+        } while (!rep.equals("invention") && !rep.equals("monopole") && !rep.equals("route"));
+        return rep;
+    }
+
 }

@@ -1,7 +1,12 @@
 package Joueur;
 
 import Carte.Developpement.CarteDeveloppement;
+import Carte.Developpement.Chevalier;
 import Carte.Developpement.PointDeVictoire;
+import Carte.Developpement.Progres.Progres;
+import Carte.Developpement.Progres.ProgresInvention;
+import Carte.Developpement.Progres.ProgresMonopole;
+import Carte.Developpement.Progres.ProgresRoute;
 import Carte.Ressources.CarteRessources;
 import Carte.Speciale.CarteSpeciale;
 import Jeu.Communication;
@@ -81,7 +86,9 @@ public class Joueur {
 	}
 
 	private void jouerCarteDeveloppement() {
-		if (carteDev) {
+		if (deckCarteDeveloppement.isEmpty()) {
+			System.out.println("Vous n'avez pas de carte de développement");
+		} else if (carteDev) {
 			StringBuilder sb = new StringBuilder();
 			for (CarteDeveloppement c : deckCarteDeveloppement)
 				sb.append(c + " ");
@@ -89,6 +96,85 @@ public class Joueur {
 			String dev = c.choixAction("Voulez-vous jouer une carte développement ?");
 			if (dev.equals("oui"))
 				utiliserCarteDevelopment();
+		}
+	}
+
+	private void utiliserCarteDevelopment() {
+		boolean hasChevalier = false;
+		boolean hasProgres = false;
+		for (CarteDeveloppement cd : deckCarteDeveloppement) {
+			if (cd instanceof Chevalier)
+				hasChevalier = true;
+			if (cd instanceof Progres)
+				hasProgres = true;
+		}
+		String carteJouer = "";
+		if (hasChevalier && hasProgres)
+			carteJouer = c.choixCarteDeveloppement("Voulez-vous jouer une carte Chevalier ou une carte Progres ?");
+		else if (hasChevalier)
+			carteJouer = "chevalier";
+		else if (hasProgres)
+			carteJouer = "progres";
+
+		switch (carteJouer) {
+			case "chevalier":
+				for (CarteDeveloppement cd : deckCarteDeveloppement) {
+					if (cd instanceof Chevalier) {
+						((Chevalier) cd).jouerChevalier();
+						deckCarteDeveloppement.remove(cd);
+						break;
+					}
+				}
+				break;
+			case "progres":
+				for (CarteDeveloppement cd : deckCarteDeveloppement) {
+					StringBuilder sb = new StringBuilder();
+					if (cd instanceof Progres) {
+						sb.append(cd);
+					}
+					System.out.println("Voici la liste de vos cartes proges: " + sb.toString());
+					String carteProgres = c.choixCarteProgres();
+					switch (carteProgres) {
+						case "invention":
+							for (CarteDeveloppement cp : deckCarteDeveloppement) {
+								if (cp instanceof ProgresInvention) {
+									((ProgresInvention) cp).pioche();
+									deckCarteDeveloppement.remove(cp);
+									break;
+								}
+							}
+							break;
+						case "monopole":
+							for (CarteDeveloppement cp : deckCarteDeveloppement) {
+								if (cp instanceof ProgresMonopole) {
+									((ProgresMonopole) cp).monopole();
+									deckCarteDeveloppement.remove(cp);
+									break;
+								}
+							}
+							break;
+						case "route":
+							for (CarteDeveloppement cp : deckCarteDeveloppement) {
+								if (cp instanceof ProgresRoute) {
+									((ProgresRoute) cp).construireRoute();
+									deckCarteDeveloppement.remove(cp);
+									break;
+								}
+							}
+							break;
+					}
+				}
+				break;
+		}
+	}
+
+	private void achatCarteDeveloppement() {
+		if (!plateau.getPileCarteDeveloppement().isEmpty()) {
+			CarteDeveloppement cd = plateau.getPileCarteDeveloppement().removeFirst();
+			System.out.println("Vous avez obtenu: " + cd);
+			deckCarteDeveloppement.add(cd);
+		} else {
+			System.out.println("Il n'y a plus de carte développement disponible");
 		}
 	}
 

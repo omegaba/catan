@@ -4,8 +4,8 @@ import Joueur.Joueur;
 import Plateau.Infrastructures.Route;
 
 public class ProgresRoute extends Progres {
-    public ProgresRoute(String nom, Joueur j) {
-        super(nom, j);
+    public ProgresRoute(Joueur j) {
+        super("Construction de route", j);
         // TODO Auto-generated constructor stub
     }
 
