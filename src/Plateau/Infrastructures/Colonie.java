@@ -54,29 +54,46 @@ public class Colonie {
 					String locationHorizontale = decoupe[0];
 					String locationVerticale = decoupe[1];
 					HashMap<String, Case> map=new HashMap();
+					String inverseLocation, inverseLh, inverseLv;
+						if(locationHorizontale.equals("bas"){
+							inverseLh="haut";
+						}
+						else{
+							inverseLh="bas";
+						}
+						
+						if(locationVerticale.equals("gauche"){
+							inverseLv="droit";
+						}
+						else{
+							inverseLv="gauche";
+						}
+						inverseLocation= inverseLv + " "+ inverseLh;
+						
+						
 						for (var v : c.getMap().entrySet()) {
 							if(v.getKey().equals(location)){
 								.put(location,v.getValue());
 							}
 							if(v.getKey().equals(locationHorizontale)){
-								map.put(locationHorizontale,v.getValue());
+								map.put(inverseLv+" "+locationHorizontale,v.getValue());
 							}
 							if(v.getKey().equals(locationVerticale)){
-								map.put(locationVerticale,v.getValue());
+								map.put(locationVerticale+" "+inverseLh,v.getValue());
 							}
 						}
 				
 						if(locationHorizontale.equals("haut") && locationVerticale.equals("gauche")){
-							map.put("bas droit");
+							map.put("bas droit", c);
 						}
 						if(locationHorizontale.equals("bas") && locationVerticale.equals("gauche")){
-							map.put("haut droit");
+							map.put("haut droit",c);
 						}
 						if(locationHorizontale.equals("haut") && locationVerticale.equals("droit")){
-							map.put("bas gauche");
+							map.put("bas gauche",c);
 						}
-						if(locationHorizontale.equals("bas") && locationVerticale.equals("droit")){
-							map.put("haut gauche");
+						if(locationHorizontale.equals("bas",c) && locationVerticale.equals("droit")){
+							map.put("haut gauche",c);
 						}
 				
 					setMapColonie(i,j, location);
@@ -101,15 +118,15 @@ public class Colonie {
 			plateau[i][j].setColonie(c);
 	}*/
 	
-	public void setMapColonie(int x, int y, String location){
+	public void setMapColonie(int x, int y){
 		Case c= plateau[x][y];
 			for( var v : case_adja.entrySet()){
 				if(location.equals("bas gauche"){
 					switch(v.getKey()){
-						case "gauche":
+						case "haut gauche":
 							v.getValue().getMapColonie().put("bas droit", this);
 							break;
-						case "bas":
+						case "bas droit":
 							v.getValue().getMapColonie().put("haut gauche", this);
 							break;
 						case "bas gauche":
