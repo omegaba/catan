@@ -134,4 +134,13 @@ public class Communication {
         return rep;
     }
 
+    public int choixColonieUpgrade(int nbColonies) {
+        System.out.println("Choisissez une colonie à transformer en ville");
+        String rep;
+        do {
+            rep = sc.nextLine().toLowerCase().replaceAll("\\s+", "").strip();
+        } while (Integer.parseInt(rep) <= 0 || Integer.parseInt(rep) > nbColonies);
+        return Integer.parseInt(rep) - 1;
+    }
+
 }

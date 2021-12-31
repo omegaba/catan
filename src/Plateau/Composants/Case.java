@@ -5,22 +5,20 @@ import java.util.HashMap;
 import Plateau.Infrastructures.Colonie;
 import Plateau.Infrastructures.Port;
 import Plateau.Infrastructures.Route;
-import Plateau.Infrastructure.Colonie;
+import Plateau.Infrastructures.Colonie;
 
 public class Case {
     private final int numero;
-    private final String environment, production;
+    private final String environement, production;
     private Route nord, est, sud, ouest;
-    private Object sommets;
     private Port port;
     private HashMap<String, Case> case_Adja = new HashMap<>();
-    private HashMap<String, Colonie> MapColonie= new HashMap<>();
-    
-    
-    public Case(int numero, String environment) {
+    private HashMap<String, Colonie> MapColonie = new HashMap<>();
+
+    public Case(int numero, String environement) {
         this.numero = numero;
-        this.environment = environment;
-        switch (environment) {
+        this.environement = environement;
+        switch (environement) {
             case "Forêt":
                 production = "Bois";
                 break;
@@ -40,7 +38,7 @@ public class Case {
                 production = "";
         }
         port = null;
-        colonie=null;
+        MapColonie = null;
     }
 
     public void setPort(Port port) {
@@ -77,43 +75,44 @@ public class Case {
                 return null;
         }
     }
-    
-    public boolean estEmplacementLibre(){
-    	if(this.colonie==null && pretDeRouteAlie() && deuxColonieDedistance()){  //pretDeRouteAlie() : methode qui check si on est pret d'une route aliée
-    		return true;
-    	}
-    	return false;
-    }
+
+    // public boolean estEmplacementLibre() {
+    //     if (this.MapColonie == null && pretDeRouteAlie() && deuxColonieDedistance()) { // pretDeRouteAlie() : methode qui
+    //                                                                                 // check si on est pret d'une route
+    //                                                                                 // aliée
+    //         return true;
+    //     }
+    //     return false;
+    // }
 
     public String toString() {
-        return "  " + numero + "  " + environment.substring(0, 2);
+        return "  " + numero + "  " + environement.substring(0, 2);
     }
 
     public HashMap<String, Case> getMap() {
-        return caseAdja;
+        return case_Adja;
     }
 
     public int getNumero() {
         return numero;
     }
 
-    public String getEnvironment() {
-        return environment;
+    public String getEnvironement() {
+        return environement;
     }
 
     public String getRessource() {
         return production;
     }
 
-    public HashMap<String, Colonie> getColonie() {
+    public HashMap<String, Colonie> getMapColonie() {
         return this.MapColonie;
     }
-    
-    public boolean hasColonie(){
-    	if(this.colonie !=null){
-    		return true;
-    	}
-    	return false;
-    }
 
+    public boolean hasColonie() {
+        if (!this.MapColonie.isEmpty()) {
+            return true;
+        }
+        return false;
+    }
 }

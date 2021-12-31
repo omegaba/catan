@@ -247,7 +247,7 @@ public class Joueur {
 					construireRoute();
 					break;
 				case "colonie":
-					constuireColonie();
+					construireColonie();
 					break;
 				case "ville":
 					construireVille();
@@ -256,103 +256,92 @@ public class Joueur {
 		}
 		jouerCarteDeveloppement();
 	}
-	
-	
-	public boolean aRessource(int t){
+
+	public boolean aRessource(int t) {
 		int nbArgile = nbRessource("Argile");
 		int nbBois = nbRessource("Bois");
 		int nbLaine = nbRessource("Laine");
 		int nbBle = nbRessource("Ble");
-		if(nbArgile < t && nbBois < t && nbLaine < t && nbBle < t && nbMinerai < t){
+		int nbMinerai = nbRessource("Minerai");
+		if (nbArgile < t && nbBois < t && nbLaine < t && nbBle < t && nbMinerai < t) {
 			return false;
 		}
 		return true;
 	}
-	
-	public boolean aRessource(String str){
+
+	public boolean aRessource(String str) {
 		int nbArgile = nbRessource("Argile");
 		int nbBois = nbRessource("Bois");
 		int nbLaine = nbRessource("Laine");
 		int nbBle = nbRessource("Ble");
-		int nbMinerai=nbRessource("Minerai");
-		switch(str){
+		int nbMinerai = nbRessource("Minerai");
+		switch (str) {
 			case "colonie":
-				if(nbArgile < 1 && nbBois < 1 && nbLaine < 1 && nbBle < 1){
+				if (nbArgile < 1 && nbBois < 1 && nbLaine < 1 && nbBle < 1)
 					return false;
-				}
-			case "ville": 
-				if(nbMinerai <3 &&  nbBle <2){
+				break;
+			case "ville":
+				if (nbMinerai < 3 && nbBle < 2)
 					return false;
-				}
+				break;
 			case "route":
-				if(nbArgile <1 && nbBois<1){
+				if (nbArgile < 1 && nbBois < 1)
 					return false;
-				}
+				break;
 		}
 		return true;
 	}
-	
-	
-	public void construireColonie(){
-		int nbArgile = nbRessource("Argile");
-		int nbBois = nbRessource("Bois");
-		int nbLaine = nbRessource("Laine");
-		int nbBle = nbRessource("Ble");
+
+	public void construireColonie() {
 		System.out.println("Matériaux utilisés pour la construction: Argile(1) , Bois(1), Laine(1), Blé(1)\n");
-			if(!aRessource("colonie"){
-				System.out.println("Vous n'avez pas les ressource necéssaires pour construire une colonie");
-			}
-			else{
-				perdreRessource("Argile",1);
-				perdreRessource("Bois",1);
-				perdreRessource("Laine",1);
-				perdreRessource("Ble",1);
-				Colonie c=new Colonie(this.joueur, false, this.plateau);
-				c.placer();
-				this.colonie.add(c);
-				
-			}
-		 
+		if (!aRessource("colonie")) {
+			System.out.println("Vous n'avez pas les ressource necéssaires pour construire une colonie");
+		} else {
+			perdreRessource("Argile", 1);
+			perdreRessource("Bois", 1);
+			perdreRessource("Laine", 1);
+			perdreRessource("Ble", 1);
+			Colonie col = new Colonie(this, false, this.plateau);
+			col.placer();
+			this.colonie.add(col);
+		}
 	}
-	
-	public void construireVille(){
-		Scanner sc = new Scanner(System.in);
-		String s = sc.nextLine();
+
+	public void construireVille() {
 		System.out.println("Voici la liste de vos Colonie");
-		String listColonie="";
-		int compteur=1;
-		for(Colonie colon : colonie){
-			listColonie+= colon.toString+ " (Colonie numéro " + compteur+") + \n";
-			compteur+=1;
+		String listColonie = "";
+		int compteur = 0;
+		for (Colonie colon : colonie) {
+			compteur += 1;
+			listColonie += colon + " (Colonie numéro " + compteur + ")\n";
 		}
 		System.out.println(listColonie);
-		System.out.pritnln("Choisissez une colonie à transformer en ville");
-		//associer le numéro demandé et la colonie correspondant dans la list
-		String location=sc.nextLine();  // il y aura des coordonnées de case dans la string
+		// associer le numéro demandé et la colonie correspondant dans la list
+		int colonieUprage = c.choixColonieUpgrade(compteur);
 		System.out.println("Matériaux utilisés pour la construction: Minerai(3), Blé(2)\n");
-			if(!aRessource("ville"){
-				System.out.println("Vous n'avez pas les ressource necéssaires pour construire une ville");
-			}
-			else{
-				perdreRessource("Minerai",3);
-				perdreRessource("Ble",2);
-				c.upgrade();
-			}
+		if (!aRessource("ville")) {
+			System.out.println("Vous n'avez pas les ressource necéssaires pour construire une ville");
+		} else {
+			perdreRessource("Minerai", 3);
+			perdreRessource("Ble", 2);
+			colonie.get(colonieUprage).upgrade();
 		}
-	
-	
-	
+	}
+
+	public void construireRoute() {
+
+	}
 
 	public void recevoirRessource(String ressource, int n) {
 		for (int i = 0; i < n; i++) {
-			deckCarteRessources.add(new CarteRessources(ressource, this));
+			deckCarteRessources.add(new CarteRessources(ressource.toLowerCase(), this));
 		}
 	}
 
 	public void perdreRessource(String ressource, int n) {
 		for (int i = 0; i < n; i++) {
 			for (CarteRessources c : deckCarteRessources) {
-				if (c.getNom().equals(ressource)) {
+				if (c.getNom().equalsIgnoreCase(ressource)) {
 					deckCarteRessources.remove(c);
 				}
 			}
@@ -488,10 +477,13 @@ public class Joueur {
 	public int getPoints() {
 		return points;
 	}
-	
 
 	public LinkedList<CarteRessources> getDeckCarteRessources() {
 		return deckCarteRessources;
+	}
+
+	public String getNom() {
+		return nom;
 	}
 
 }
