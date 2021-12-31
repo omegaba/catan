@@ -5,6 +5,7 @@ import java.util.HashMap;
 import Plateau.Infrastructures.Colonie;
 import Plateau.Infrastructures.Port;
 import Plateau.Infrastructures.Route;
+import Plateau.Infrastructure.Colonie;
 
 public class Case {
     private final int numero;
@@ -12,8 +13,10 @@ public class Case {
     private Route nord, est, sud, ouest;
     private Object sommets;
     private Port port;
-    private HashMap<String, Case> caseAdja = new HashMap<>();
-
+    private HashMap<String, Case> case_Adja = new HashMap<>();
+    private HashMap<String, Colonie> MapColonie= new HashMap<>();
+    
+    
     public Case(int numero, String environment) {
         this.numero = numero;
         this.environment = environment;
@@ -27,7 +30,7 @@ public class Case {
             case "Champs":
                 production = "Blé";
                 break;
-            case "Colline":
+            case "Coline":
                 production = "Argile";
                 break;
             case "Montagne":
@@ -37,6 +40,7 @@ public class Case {
                 production = "";
         }
         port = null;
+        colonie=null;
     }
 
     public void setPort(Port port) {
@@ -73,6 +77,13 @@ public class Case {
                 return null;
         }
     }
+    
+    public boolean estEmplacementLibre(){
+    	if(this.colonie==null && pretDeRouteAlie() && deuxColonieDedistance()){  //pretDeRouteAlie() : methode qui check si on est pret d'une route aliée
+    		return true;
+    	}
+    	return false;
+    }
 
     public String toString() {
         return "  " + numero + "  " + environment.substring(0, 2);
@@ -95,6 +106,14 @@ public class Case {
     }
 
     public HashMap<String, Colonie> getColonie() {
-        return null;
+        return this.MapColonie;
     }
+    
+    public boolean hasColonie(){
+    	if(this.colonie !=null){
+    		return true;
+    	}
+    	return false;
+    }
+
 }
