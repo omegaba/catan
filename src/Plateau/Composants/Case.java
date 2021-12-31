@@ -114,6 +114,9 @@ public class Case {
    HashMap getMapColonie(){
    	return this.MapColonie;
    }
+   
+   
+   
     
     
 }

@@ -51,29 +51,28 @@ public class Colonie {
 				else{
 					String location = sc.nextLine();
 					String[] decoupe = decoupe(location);
-					String locationHorizontale = decoupe[0];
-					String locationVerticale = decoupe[1];
-					HashMap<String, Case> map=new HashMap();
-					String inverseLocation, inverseLh, inverseLv;
-						if(locationHorizontale.equals("bas"){
-							inverseLh="haut";
+					String locationHorizontale = decoupe[1];
+					String locationVerticale = decoupe[0];
+					HashMap<String, Case> map=new HashMap<>();
+					String  inverseLh, inverseLv;
+						if(locationHorizontale.equals("gauche"){
+							inverseLh="droite";
 						}
 						else{
-							inverseLh="bas";
+							inverseLh="gauche";
 						}
 						
-						if(locationVerticale.equals("gauche"){
-							inverseLv="droit";
+						if(locationVerticale.equals("bas"){
+							inverseLv="haut";
 						}
 						else{
-							inverseLv="gauche";
+							inverseLv="bas";
 						}
-						inverseLocation= inverseLv + " "+ inverseLh;
 						
 						
 						for (var v : c.getMap().entrySet()) {
 							if(v.getKey().equals(location)){
-								.put(location,v.getValue());
+								map.put(location,v.getValue());
 							}
 							if(v.getKey().equals(locationHorizontale)){
 								map.put(inverseLv+" "+locationHorizontale,v.getValue());
@@ -96,7 +95,7 @@ public class Colonie {
 							map.put("haut gauche",c);
 						}
 				
-					setMapColonie(i,j, location);
+					setMapColonie();
 					this.case_adja=map;
 				}
 		}
@@ -119,74 +118,24 @@ public class Colonie {
 	}*/
 	
 	public void setMapColonie(int x, int y){
-		Case c= plateau[x][y];
 			for( var v : case_adja.entrySet()){
-				if(location.equals("bas gauche"){
-					switch(v.getKey()){
-						case "haut gauche":
-							v.getValue().getMapColonie().put("bas droit", this);
-							break;
-						case "bas droit":
-							v.getValue().getMapColonie().put("haut gauche", this);
-							break;
-						case "bas gauche":
-							v.getValue().getMapColonie().put("haut droit", this);
-							break;
+				switch(v.getKey()){
+					case "haut gauche":
+						v.getValue().getMapColonie().put("bas droit", this);
+						break;
+					case "bas droit":
+						v.getValue().getMapColonie().put("haut gauche", this);
+						break;
+					case "bas gauche":
+						v.getValue().getMapColonie().put("haut droit", this);
+						break;
 						
-						case "haut droit":
-							v.getValue().getMapColonie().put("bas gauche", this);
-							break;
-					}
-				}
-				if(location.equals("bas droit"){
-					switch(v.getKey()){
-						case "droit":
-							v.getValue().getMapColonie().put("bas gauche", this);
-							break;
-						case "bas":
-							v.getValue().getMapColonie().put("haut droit", this);
-							break;
-						case "bas droit":
-							v.getValue().getMapColonie().put("haut gauche", this);
-							break;
-						case "haut gauche":
-							v.getValue().getMapColonie().put("bas droit", this);
-							break;
-					}
-				}
-				if(location.equals("haut droit"){
-					switch(v.getKey()){
-						case "haut":
-							v.getValue().getMapColonie().put("bas droit", this);
-							break;
-						case "droit":
-							v.getValue().getMapColonie().put("haut gauche", this);
-							break;
-						case "haut droit":
-							v.getValue().getMapColonie().put("bas gauche", this);
-							break;
-						case "bas gauche":
-							v.getValue().getMapColonie().put("haut droit", this);
-							break;
-					}
-				}
-				if(location.equals("haut gauche"){
-					switch(v.getKey()){
-						case "haut":
-							v.getValue().getMapColonie().put("bas gauche", this);
-							break;
-						case "gauche":
-							v.getValue().getMapColonie().put("haut droit", this);
-							break;
-						case "haut gauche":
-							v.getValue().getMapColonie().put("bas droit", this);
-							break;
-						case "bas droit":
-							v.getValue().getMapColonie().put("haut gauche", this);
-							break;
-					}
+					case "haut droit":
+						v.getValue().getMapColonie().put("bas gauche", this);
+						break;
 				}
 			}
+				
 	}
 
 	public Joueur getJoueur() {
@@ -200,5 +149,27 @@ public class Colonie {
 	public LinkedList getCaseAdja() {
 		return this.case_adja;
 	}
+	
+	String CaseDescription(){
+	String Str="";
+		for(var v : this.case_adja.entrySet()){
+			Str+= v.getValue().getEnvironnement()+ " numéro " + v.getValue().getNumero()+"\n";
+		}
+		return Str;
+	}
+	
+	public String toString(){
+	String adjacents=CaseDescription();
+	String ColonieOuVille;
+		if(isVille) {
+			ColonieOuVille="Ville";
+		}else{
+			ColonieOuVille="Colonie";
+		}
+	return "Colonie du joueur "+this.joueur.getNom()+
+	" Est une "+ColonieOuVille+
+	" Située entre "+ adjacents;
+	}
+	
 
 }

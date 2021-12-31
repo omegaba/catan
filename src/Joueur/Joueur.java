@@ -218,33 +218,30 @@ public class Joueur {
 		 
 	}
 	
-	public void listColonie(){
-	}
 	public void construireVille(){
 		Scanner sc = new Scanner(System.in);
 		String s = sc.nextLine();
-		System.out.println("Choisissez une colonie à transformer en ville");
+		System.out.println("Voici la liste de vos Colonie");
+		String listColonie="";
+		int compteur=1;
+		for(Colonie colon : colonie){
+			listColonie+= colon.toString+ " (Colonie numéro " + compteur+") + \n";
+			compteur+=1;
+		}
+		System.out.println(listColonie);
+		System.out.pritnln("Choisissez une colonie à transformer en ville");
+		//associer le numéro demandé et la colonie correspondant dans la list
 		String location=sc.nextLine();  // il y aura des coordonnées de case dans la string
-		Colonie c=new Colonie(this.joueur, false, this.plateau);
-			if(!c.hasColonie(location)){
-				System.out.println("Cette case n'est pas une colonie"); //faire en sorte que le joueur puisse rechoisir une case
+		System.out.println("Matériaux utilisés pour la construction: Minerai(3), Blé(2)\n");
+			if(!aRessource("ville"){
+				System.out.println("Vous n'avez pas les ressource necéssaires pour construire une ville");
 			}
-			else {
-				System.out.println("Matériaux utilisés pour la construction: Minerai(3), Blé(2)\n");
-					if(!aRessource("ville"){
-						System.out.println("Vous n'avez pas les ressource necéssaires pour construire une ville");
-					}
-					else{
-						perdreRessource("Minerai",3);
-						perdreRessource("Ble",2);
-						c.upgrade();
-						c.remplaceColony(location, c);
-						//finir, remplacer la colonie d'vant par cette ville
-					}
+			else{
+				perdreRessource("Minerai",3);
+				perdreRessource("Ble",2);
+				c.upgrade();
 			}
-	}
-	
-	
+		}
 	
 	
 	
@@ -376,5 +373,6 @@ public class Joueur {
 	public int getPoints() {
 		return points;
 	}
+	
 
 }
