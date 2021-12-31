@@ -74,7 +74,7 @@ public class Communication {
     }
 
     public String choixRessource(String action) {
-        System.out.println(action + " Vous pouvez écrire stop pour arreter l'échange.");
+        System.out.println(action);
         String rep;
         do {
             rep = sc.nextLine().toLowerCase().replaceAll("\\s+", "").strip();

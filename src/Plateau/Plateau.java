@@ -1,6 +1,7 @@
 package Plateau;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -8,14 +9,17 @@ import Jeu.AffichageText;
 import Jeu.Communication;
 import Joueur.Joueur;
 import Plateau.Composants.Case;
+import Plateau.Infrastructures.Colonie;
 import Plateau.Infrastructures.Port;
 import Plateau.Infrastructures.PortSpecialise;
+import Plateau.Infrastructures.Route;
 
 public class Plateau {
 
     private Case[][] plateau;
     private LinkedList<Joueur> listJoueurs;
     private int numeroJoueurActuel;
+    private boolean partiFini;
 
     public Plateau() {
         int nbPortNormal = 3;
@@ -44,6 +48,94 @@ public class Plateau {
             }
         }
 
+        for (int i = 0; i < plateau.length; i++) {
+            for (int j = 0; j < plateau[i].length; j++) {
+                if (i == 0 && j == 0) {
+                    plateau[i][j].getMap().put("haut gauche", null);
+                    plateau[i][j].getMap().put("haut", null);
+                    plateau[i][j].getMap().put("haut droit", null);
+                    plateau[i][j].getMap().put("droit", plateau[i][j + 1]);
+                    plateau[i][j].getMap().put("bas droit", plateau[i + 1][j + 1]);
+                    plateau[i][j].getMap().put("bas", plateau[i + 1][j]);
+                    plateau[i][j].getMap().put("bas gauche", null);
+                    plateau[i][j].getMap().put("gauche", null);
+                } else if (i == 0 && j == plateau[i].length - 1) {
+                    plateau[i][j].getMap().put("haut gauche", null);
+                    plateau[i][j].getMap().put("haut", null);
+                    plateau[i][j].getMap().put("haut droit", null);
+                    plateau[i][j].getMap().put("droit", null);
+                    plateau[i][j].getMap().put("bas droit", null);
+                    plateau[i][j].getMap().put("bas", plateau[i + 1][j]);
+                    plateau[i][j].getMap().put("bas gauche", plateau[i + 1][j - 1]);
+                    plateau[i][j].getMap().put("gauche", plateau[i - 1][j]);
+                } else if (i == 0) {
+                    plateau[i][j].getMap().put("haut gauche", null);
+                    plateau[i][j].getMap().put("haut", null);
+                    plateau[i][j].getMap().put("haut droit", null);
+                    plateau[i][j].getMap().put("droit", plateau[i][j + 1]);
+                    plateau[i][j].getMap().put("bas droit", plateau[i + 1][j + 1]);
+                    plateau[i][j].getMap().put("bas", plateau[i + 1][j]);
+                    plateau[i][j].getMap().put("bas gauche", plateau[i + 1][j - 1]);
+                    plateau[i][j].getMap().put("gauche", plateau[i][j - 1]);
+                } else if (i == plateau.length - 1 && j == 0) {
+                    plateau[i][j].getMap().put("haut gauche", null);
+                    plateau[i][j].getMap().put("haut", plateau[i - 1][j]);
+                    plateau[i][j].getMap().put("haut droit", plateau[i - 1][j + 1]);
+                    plateau[i][j].getMap().put("droit", plateau[i][j + 1]);
+                    plateau[i][j].getMap().put("bas droit", null);
+                    plateau[i][j].getMap().put("bas", null);
+                    plateau[i][j].getMap().put("bas gauche", null);
+                    plateau[i][j].getMap().put("gauche", null);
+                } else if (i == plateau.length - 1 && j == plateau[i].length - 1) {
+                    plateau[i][j].getMap().put("haut gauche", plateau[i - 1][j - 1]);
+                    plateau[i][j].getMap().put("haut", plateau[i - 1][j]);
+                    plateau[i][j].getMap().put("haut droit", null);
+                    plateau[i][j].getMap().put("droit", null);
+                    plateau[i][j].getMap().put("bas droit", null);
+                    plateau[i][j].getMap().put("bas", null);
+                    plateau[i][j].getMap().put("bas gauche", null);
+                    plateau[i][j].getMap().put("gauche", plateau[i][j - 1]);
+                } else if (i == plateau.length - 1) {
+                    plateau[i][j].getMap().put("haut gauche", plateau[i - 1][j - 1]);
+                    plateau[i][j].getMap().put("haut", plateau[i - 1][j]);
+                    plateau[i][j].getMap().put("haut droit", plateau[i - 1][j + 1]);
+                    plateau[i][j].getMap().put("droit", plateau[i][j + 1]);
+                    plateau[i][j].getMap().put("bas droit", null);
+                    plateau[i][j].getMap().put("bas", null);
+                    plateau[i][j].getMap().put("bas gauche", null);
+                    plateau[i][j].getMap().put("gauche", plateau[i][j - 1]);
+                } else if (j == 0) {
+                    plateau[i][j].getMap().put("haut gauche", null);
+                    plateau[i][j].getMap().put("haut", plateau[i - 1][j]);
+                    plateau[i][j].getMap().put("haut droit", plateau[i - 1][j + 1]);
+                    plateau[i][j].getMap().put("droit", plateau[i][j + 1]);
+                    plateau[i][j].getMap().put("bas droit", plateau[i + 1][j + 1]);
+                    plateau[i][j].getMap().put("bas", plateau[i + 1][j]);
+                    plateau[i][j].getMap().put("bas gauche", null);
+                    plateau[i][j].getMap().put("gauche", null);
+                } else if (j == plateau[i].length - 1) {
+                    plateau[i][j].getMap().put("haut gauche", plateau[i - 1][j - 1]);
+                    plateau[i][j].getMap().put("haut", plateau[i - 1][j]);
+                    plateau[i][j].getMap().put("haut droit", null);
+                    plateau[i][j].getMap().put("droit", null);
+                    plateau[i][j].getMap().put("bas droit", null);
+                    plateau[i][j].getMap().put("bas", plateau[i + 1][j]);
+                    plateau[i][j].getMap().put("bas gauche", plateau[i + 1][j - 1]);
+                    plateau[i][j].getMap().put("gauche", plateau[i][j - 1]);
+                } else {
+                    plateau[i][j].getMap().put("haut gauche", plateau[i - 1][j - 1]);
+                    plateau[i][j].getMap().put("haut", plateau[i - 1][j]);
+                    plateau[i][j].getMap().put("haut droit", plateau[i - 1][j + 1]);
+                    plateau[i][j].getMap().put("droit", plateau[i][j + 1]);
+                    plateau[i][j].getMap().put("bas droit", plateau[i + 1][j + 1]);
+                    plateau[i][j].getMap().put("bas", plateau[i + 1][j]);
+                    plateau[i][j].getMap().put("bas gauche", plateau[i + 1][j - 1]);
+                    plateau[i][j].getMap().put("gauche", plateau[i][j - 1]);
+                }
+
+            }
+        }
+
         Communication c = new Communication();
 
         int nbJoueurs = c.demanderNombreJoueurs();
@@ -52,33 +144,61 @@ public class Plateau {
             listJoueurs.add(c.demanderJoueurs(i, this));
 
         numeroJoueurActuel = 0;
+        partiFini = false;
     }
 
     public void deuxPremiersTour(AffichageText a) {
-
+        for (Joueur j : listJoueurs) {
+            Colonie c = new Colonie(j, false, this);
+            c.placerPremierTour();
+            Route r = new Route(j);
+            r.placer();
+            a.affiche();
+        }
+        for (int i = listJoueurs.size() - 1; i >= 0; i--) {
+            Colonie c = new Colonie(listJoueurs.get(i), false, this);
+            c.placerPremierTour();
+            Route r = new Route(listJoueurs.get(i));
+            r.placer();
+            a.affiche();
+        }
     }
 
     public void tour() {
         System.out.println("Tour de :");
         listJoueurs.get(numeroJoueurActuel).affiche();
         listJoueurs.get(numeroJoueurActuel).actionEffectuer();
+        listJoueurs.get(numeroJoueurActuel).calculPoints();
+        if (listJoueurs.get(numeroJoueurActuel).getPoints() >= 10)
+            partiFini = true;
         if (++numeroJoueurActuel == listJoueurs.size())
             numeroJoueurActuel = 0;
     }
 
-    public void repartionRessource(int resultatDe) {
-
-    }
-
-    public boolean partiFini() {
-        for (Joueur j : listJoueurs)
-            if (j.getPoints() >= 10)
-                return true;
-        return false;
+    public void repartirRessource(int resultatDe) {
+        for (int i = 0; i < plateau.length; i++) {
+            for (int j = 0; j < plateau[i].length; j++) {
+                if (plateau[i][j].getNumero() == resultatDe) {
+                    HashMap<String, Colonie> listColonieCase = plateau[i][j].getColonie();
+                    for (var c : listColonieCase.entrySet()) {
+                        c.getValue().getJoueur().recevoirRessource(plateau[i][j].getRessource(),
+                                c.getValue().getNbrRessource());
+                    }
+                }
+            }
+        }
     }
 
     public Case[][] getPlateau() {
         return plateau;
+    }
+
+    public boolean getPartiFini() {
+        return partiFini;
+    }
+
+    public LinkedList<Joueur> getListJoueurs() {
+        return listJoueurs;
     }
 
 }

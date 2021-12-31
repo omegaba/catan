@@ -65,4 +65,8 @@ public class Colonie {
 		return this.case_adja;
 	}
 
+	public int getNbrRessource() {
+		return this.nbrRessource;
+	}
+
 }

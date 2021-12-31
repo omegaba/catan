@@ -1,11 +1,13 @@
 package Carte.Developpement;
 
 import Carte.Carte;
+import Joueur.Joueur;
 
 public class CarteDeveloppement extends Carte {
     private String nom;
 
-    public CarteDeveloppement(String nom) {
+    public CarteDeveloppement(String nom, Joueur j) {
+        super(j);
         this.nom = nom;
     }
 
