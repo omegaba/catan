@@ -9,7 +9,7 @@ public class AffichageText {
         this.p = p;
     }
 
-    void affiche() {
+    public void affiche() {
         for (int i = 0; i < p.getPlateau().length; i++) {
             for (int j = 0; j < p.getPlateau().length; j++) {
                 System.out.print("|" + p.getPlateau()[i][j] + "|");

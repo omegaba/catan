@@ -2,21 +2,23 @@ package Plateau.Composants;
 
 import java.util.HashMap;
 
+import Plateau.Infrastructures.Colonie;
 import Plateau.Infrastructures.Port;
 import Plateau.Infrastructures.Route;
+import Plateau.Infrastructures.Colonie;
 
 public class Case {
     private final int numero;
-    private final String environment, production;
+    private final String environement, production;
     private Route nord, est, sud, ouest;
-    private Object sommets;
     private Port port;
-    private HashMap<String, Case> caseAdja = new HashMap<>();
+    private HashMap<String, Case> case_Adja = new HashMap<>();
+    private HashMap<String, Colonie> MapColonie = new HashMap<>();
 
-    public Case(int numero, String environment) {
+    public Case(int numero, String environement) {
         this.numero = numero;
-        this.environment = environment;
-        switch (environment) {
+        this.environement = environement;
+        switch (environement) {
             case "Forêt":
                 production = "Bois";
                 break;
@@ -26,7 +28,7 @@ public class Case {
             case "Champs":
                 production = "Blé";
                 break;
-            case "Colline":
+            case "Coline":
                 production = "Argile";
                 break;
             case "Montagne":
@@ -36,6 +38,7 @@ public class Case {
                 production = "";
         }
         port = null;
+        MapColonie = null;
     }
 
     public void setPort(Port port) {
@@ -73,23 +76,43 @@ public class Case {
         }
     }
 
+    // public boolean estEmplacementLibre() {
+    //     if (this.MapColonie == null && pretDeRouteAlie() && deuxColonieDedistance()) { // pretDeRouteAlie() : methode qui
+    //                                                                                 // check si on est pret d'une route
+    //                                                                                 // aliée
+    //         return true;
+    //     }
+    //     return false;
+    // }
+
     public String toString() {
-        return "  " + numero + "  " + environment;
+        return "  " + numero + "  " + environement.substring(0, 2);
     }
 
     public HashMap<String, Case> getMap() {
-        return caseAdja;
+        return case_Adja;
     }
 
-    int getNumero() {
+    public int getNumero() {
         return numero;
     }
 
-    String getEnvironment() {
-        return environment;
+    public String getEnvironement() {
+        return environement;
     }
 
-    String getProduction() {
+    public String getRessource() {
         return production;
+    }
+
+    public HashMap<String, Colonie> getMapColonie() {
+        return this.MapColonie;
+    }
+
+    public boolean hasColonie() {
+        if (!this.MapColonie.isEmpty()) {
+            return true;
+        }
+        return false;
     }
 }
