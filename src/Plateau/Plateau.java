@@ -28,6 +28,7 @@ public class Plateau {
     private int numeroJoueurActuel;
     private boolean partiFini;
     private LinkedList<CarteDeveloppement> pileCarteDeveloppement;
+    private Voleur voleur;
 
     public Plateau() {
         int nbPortNormal = 3;
@@ -230,6 +231,24 @@ public class Plateau {
 
     public LinkedList<CarteDeveloppement> getPileCarteDeveloppement() {
         return pileCarteDeveloppement;
+    }
+    
+    
+    public Voleur getVoleur(){
+    	return this.voleur();
+    }
+    
+    
+    void afficheJoueur(){
+    	for (Joueur j: listJoueurs){
+    		for(Colonie c : j.getColonie()){
+    			for(var v : j.getColonie().getCaseAdja().entrySet()){
+    				if(v.getValue().hasVoleur()){
+    					j.affiche+"\n";
+    				}
+    			}	
+    		}
+    	}
     }
 
 }
