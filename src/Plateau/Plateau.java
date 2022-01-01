@@ -16,6 +16,7 @@ public class Plateau {
     private Case[][] plateau;
     private LinkedList<Joueur> listJoueurs;
     private int numeroJoueurActuel;
+    private Voleur voleur;
 
     public Plateau() {
         int nbPortNormal = 3;
@@ -79,6 +80,23 @@ public class Plateau {
 
     public Case[][] getPlateau() {
         return plateau;
+    }
+    
+    public Voleur getVoleur(){
+    	return this.voleur();
+    }
+    
+    
+    void afficheJoueur(){
+    	for (Joueur j: listJoueurs){
+    		for(Colonie c : j.getColonie()){
+    			for(var v : j.getColonie().getCaseAdja().entrySet()){
+    				if(v.getValue().hasVoleur()){
+    					j.affiche+"\n";
+    				}
+    			}	
+    		}
+    	}
     }
 
 }

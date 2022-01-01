@@ -14,7 +14,7 @@ public class Case {
     private Port port;
     private HashMap<String, Case> case_Adja = new HashMap<>();
     private HashMap<String, Colonie> MapColonie= new HashMap<>();
-    
+    private boolean voleur;
     
     public Case(int numero, String environment) {
         this.numero = numero;
@@ -40,6 +40,7 @@ public class Case {
         }
         port = null;
         colonie=null;
+        voleur=false;
     }
 
     public void setPort(Port port) {
@@ -109,6 +110,14 @@ public class Case {
     		return true;
     	}
     	return false;
+    }
+    
+    public boolean hasVoleur(){
+    	return voleur==true;
+    }
+    
+    public boolean setVoleur(){
+    	this.voleur=true;
     }
     
    HashMap getMapColonie(){
