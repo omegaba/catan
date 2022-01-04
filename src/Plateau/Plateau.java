@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Random;
+import java.util.Map.Entry;
 
 import Carte.Developpement.CarteDeveloppement;
 import Carte.Developpement.Chevalier;
@@ -20,6 +21,7 @@ import Plateau.Infrastructures.Colonie;
 import Plateau.Infrastructures.Port;
 import Plateau.Infrastructures.PortSpecialise;
 import Plateau.Infrastructures.Route;
+import Plateau.Composants.Voleur;
 
 public class Plateau {
 
@@ -28,6 +30,7 @@ public class Plateau {
     private int numeroJoueurActuel;
     private boolean partiFini;
     private LinkedList<CarteDeveloppement> pileCarteDeveloppement;
+    private Voleur voleur;
 
     public Plateau() {
         int nbPortNormal = 3;
@@ -230,6 +233,28 @@ public class Plateau {
 
     public LinkedList<CarteDeveloppement> getPileCarteDeveloppement() {
         return pileCarteDeveloppement;
+    }
+    
+    
+    public Voleur getVoleur(){
+    	return this.voleur();
+    }
+    
+    
+    public void afficheJoueur(){
+    	for (Joueur j: listJoueurs){
+    		for(Colonie c : j.getColonie()){
+    			for(var v: c.getCaseAdja().entrySet()){
+    				if((v.getValue().hasVoleur())){
+    					j.affiche();
+    				}
+    			}	
+    		}
+    	}
+    }
+
+    public LinkedList<Joueur> getlistJoueur() {
+        return  listJoueurs;
     }
 
 }
