@@ -125,5 +125,7 @@ public class Case {
     public boolean setVoleur(){
     	this.voleur=true;
     }
-    
+    public HashMap<String, Colonie> getColonie(){
+        return this.MapColonie;
+    }
 }
