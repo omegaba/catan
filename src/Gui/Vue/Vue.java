@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+
+import Gui.Controleur.Controleur;
 import Gui.Model.*;
 import Joueur.Joueur;
 import javax.swing.*;
@@ -16,7 +18,7 @@ import javax.swing.JFrame;
 import java.awt.Font;
 import Gui.Model.*;
 
-public class Vue extends JPanel{
+public class Vue extends JPanel {
     private final Model model;
     private final JFrame window;
     private JPanel titleNamePanel, starbuttonPanel;
@@ -72,14 +74,13 @@ public class Vue extends JPanel{
     }
 
     public void initLeft() {
-        JPanel panel= new JPanel();
+        JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
-        JPanel de= new PanelDe(model);
-        panel.add(de); 
+        JPanel de = new PanelDe(model);
+        panel.add(de);
         add(panel, BorderLayout.LINE_START);
 
-        }
-
+    }
 
     /*
      * public void initCenter(){
@@ -204,11 +205,10 @@ public class Vue extends JPanel{
         private final JLabel Ble;
         private final JLabel Laine;
 
-
-        public PanelCarteRessource(Model model){
-            this.model= model;
+        public PanelCarteRessource(Model model) {
+            this.model = model;
             Bois = new JLabel("Bois");
-            Argile= new JLabel("Argile");
+            Argile = new JLabel("Argile");
             Ble = new JLabel("Ble");
             Minerai = new JLabel("Minerai");
             Laine = new JLabel("Laine");
@@ -234,15 +234,161 @@ public class Vue extends JPanel{
         private final JLabel de;
         private final Model model;
 
-        public PanelDe(Model model){
+        public PanelDe(Model model) {
             this.model = model;
-            de=new JLabel();
+            de = new JLabel();
             add(de);
         }
 
         public void paintComponent(Graphics g) {
             de.setText(String.valueOf(model.getDe()));
             super.paintComponent(g);
+        }
+    }
+
+    public class ButtonPanel extends JPanel {
+        private final PanelDe dePanel;
+        private final ActionButton de;
+        private final ActionButton commerce;
+        private final ActionButton valider;
+        private final ActionButton AcheterCarteDev;
+        private final ActionButton utiliserCarteDev;
+        private final ActionButton deplaceVoleur;
+        private final ActionButton construire;
+
+        public ButtonPanel(Model model, Controleur controleur) {
+            setLayout(new GridLayout(4, 2, 7, 7));
+            dePanel = new PanelDe(model);
+            de = new ActionButton("Dé", 0, controleur);
+            commerce = new ActionButton("Commerce", 1, controleur);
+            construire = new ActionButton("Construire", 2, controleur);
+            AcheterCarteDev = new ActionButton("AcheterCartDev", 3, controleur);
+            utiliserCarteDev = new ActionButton("UtiliserCartDev", 4, controleur);
+            deplaceVoleur = new ActionButton("DéplacerVoleur", 5, controleur);
+            valider = new ActionButton("Valider", 6, controleur);
+            iniTialiserPanel();
+        }
+
+        public void iniTialiserPanel() {
+            GridLayout layout = new GridLayout(4, 2, 7, 7);
+            add(de);
+            add(commerce);
+            add(construire);
+            add(AcheterCarteDev);
+            add(utiliserCarteDev);
+            add(valider);
+            add(deplaceVoleur);
+
+        }
+
+        public ActionButton getDe() {
+            return de;
+        }
+
+        public ActionButton getCommerce() {
+            return this.commerce;
+        }
+
+        public ActionButton getConstruire() {
+            return construire;
+        }
+
+        public ActionButton getUcdev() {
+            return utiliserCarteDev;
+        }
+
+        public ActionButton getAcDev() {
+            return AcheterCarteDev;
+        }
+
+        public ActionButton getValider() {
+            return valider;
+        }
+
+        public ActionButton getDeplaceVoleur() {
+            return deplaceVoleur;
+        }
+
+        public static class ActionButton extends JButton {
+            private String texte;
+            private int numero;
+            private final Controleur controleur;
+
+            public ActionButton(String texte, int numero, Controleur controleur) {
+                super(texte);
+                this.controleur = controleur;
+                this.numero = numero;
+                setVisible(true);
+
+            }
+
+            public void action(int numero) {
+                switch (numero) {
+                    case 0:
+                        addActionListener(e -> controleur.lancerDe());
+                        break;
+                    case 1:
+                        addActionListener(e -> controleur.commerce());
+                        break;
+                    case 2:
+                        addActionListener(e -> controleur.menuConstruction());
+                        break;
+                    case 3:
+                        addActionListener(e -> controleur.AcheterCarteDev());
+                        break;
+                    case 4:
+                        addActionListener(e -> controleur.utiliserCarteDev());
+                        break;
+                    case 5:
+                        addActionListener(e -> controleur.DeplaceVoleur());
+                        break;
+                    case 6:
+                        addActionListener(e -> controleur.valider());
+                        break;
+                    default:
+                        setVisible(false);
+                }
+            }
+
+            public void paintComponent(Graphics g) {
+                if (!isEnabled()) {
+                    setForeground(Color.LIGHT_GRAY);
+                } else {
+                    setForeground(Color.BLACK);
+                    super.paintComponent(g);
+                }
+            }
+        }
+    }
+
+    public class FenetreDialog extends JDialog {
+        private final Component fenetre;
+
+        public FenetreDialog(Frame source, Component fenetre, boolean modal){
+            super(source);
+            add(fenetre);
+            this.fenetre= fenetre;
+            setLocationRelativeTo(source);
+            setMinimumSize(fenetre.getPreferredSize());
+            pack();
+        }
+
+
+        public boolean isEmpty(){
+            return fenetre==null || !fenetre.isVisible();
+        }
+        
+
+        public void paint(Graphics g){
+            if (isEmpty()){
+                setVisible(false);
+            }
+            super.paint(g);
+        }
+
+        public void repaint(boolean flag){
+            setVisible(flag);
+            super.repaint();
         }
     }
 }
