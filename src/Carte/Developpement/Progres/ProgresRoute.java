@@ -11,7 +11,7 @@ public class ProgresRoute extends Progres {
 
     public void construireRoute() {
         for (int i = 0; i < 2; i++) {
-            Route r = new Route(super.joueur);
+            Route r = new Route(super.joueur, super.joueur.getPlateau());
             r.placer();
         }
     }
