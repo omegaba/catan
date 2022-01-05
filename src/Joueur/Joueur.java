@@ -47,7 +47,6 @@ public class Joueur {
 		nbRoutes = 15;
 		nbChevalierJouer = 0;
 	}
-
 	public void affiche() {
 		System.out.println("Nom :" + this.nom + ", couleur " + this.couleur);
 		System.out.println("Nombre de point : " + this.points);
@@ -58,6 +57,14 @@ public class Joueur {
 		Random rd = new Random();
 		int val = rd.nextInt(11) + 2;
 		return val;
+	}
+
+	public int nbCarteRessources() {
+		int i=0;
+		for(CarteRessources c : deckCarteRessources){
+			i+=1;
+		}
+		return i;
 	}
 
 	public int nbRessource(String ressource) {
@@ -550,7 +557,8 @@ public class Joueur {
 	}
 
 	public LinkedList<Port> getPorts() {
-		return port;
+		return port;	
+	}
 
 	public void JouerChevalier() {
 		Scanner sc = new Scanner(System.in);

@@ -2,9 +2,9 @@ package Gui.Model;
 
 import Plateau.Plateau;
 import Plateau.Composants.Voleur;
-
+import Plateau.Infrastructures.Route;
 import java.util.LinkedList;
-
+import Plateau.Infrastructures.Colonie;
 import Carte.Developpement.CarteDeveloppement;
 import Joueur.Joueur;
 
@@ -37,6 +37,17 @@ public class Model {
         this.joueur_actuel = joueur_actuel;
     }
 
+    public LinkedList<Joueur> getListJoueurs() {
+        return plateau.getListJoueurs();
+    }
+    public int getnbJoueur() {
+        int i=0;
+        for(Joueur j : plateau.getListJoueurs()) {
+            i+=1;
+        }
+        return i;
+    }
+
     public void setJoueurActuel() {
         if (tour == 1 || tour>2) {
             for (int i = 0; i < joueurs.size(); i++) {
@@ -56,7 +67,7 @@ public class Model {
         }
     }
 
-    public void ChangerTour(){
+   /* public void ChangerTour(){
         if(joueur_actuel.getPoints() >= 10){
             //
         }
@@ -67,9 +78,38 @@ public class Model {
             else if(3
             )
         }
+    }*/
+
+    public void deuxPremiersTour() {
+        for (Joueur j : joueurs) {
+            Colonie c = new Colonie(j, false, plateau);
+            c.placerPremierTour();
+            Route r = new Route(j, plateau);
+            r.placerPremierTours(c);
+        }
+        for (int i = joueurs.size() - 1; i >= 0; i--) {
+            Colonie c = new Colonie(joueurs.get(i), false, plateau);
+            c.placerPremierTour();
+            Route r = new Route(joueurs.get(i), plateau);
+            r.placerPremierTours(c);
+        }
     }
 
-    public void jouerPremierTour(){
+    public void jouerTour() {
+       // controler.jouerTour();
+    }
 
+    public int lancerDe(){
+        this.de=joueur_actuel.LancerDe();
+        plateau.repartirRessource(de);
+        //controler.repaint();
+        if(de ==7){
+            //controler.perdreRessource()
+        }
+        return de;
+    }
+
+    public int getDe(){
+        return de;
     }
 }
