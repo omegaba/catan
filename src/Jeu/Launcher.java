@@ -5,7 +5,6 @@ import Plateau.Plateau;
 public class Launcher {
     public static void main(String[] args) {
 
-        // Joueur j = new Joueur("test", "false", new Plateau());
 
         Communication c = new Communication();
         if (c.choixPartie().equals("textuel"))
