@@ -78,8 +78,17 @@ public class Case {
         }
     }
 
+    String listColo() {
+        StringBuilder sb = new StringBuilder();
+        for (var i : MapColonie.entrySet()) {
+            sb.append("key=" + i.getKey() + " value=" + i.getValue());
+        }
+        return sb.toString();
+    }
+
     public String toString() {
-        return "  " + numero + "  " + environement.substring(0, 2);
+        return "  " + numero + "  " + environement.substring(0, 2) + " haut=" + haut + " droit=" + droit + " bas=" + bas
+                + " gauche=" + gauche + " colonie:"+listColo();
     }
 
     public HashMap<String, Case> getMap() {

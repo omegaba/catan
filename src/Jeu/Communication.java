@@ -33,7 +33,7 @@ public class Communication {
     }
 
     public Joueur demanderJoueurs(int numeroJoueur, Plateau p) {
-        System.out.println("Le joueur n° " + numeroJoueur + " est-il joueur par un humain ou par l'ia ?");
+        System.out.println("Le joueur n° " + (numeroJoueur + 1) + " est-il joueur par un humain ou par l'ia ?");
         String rep;
         do {
             rep = sc.nextLine().toLowerCase().replaceAll("\\s+", "").strip();
@@ -47,14 +47,16 @@ public class Communication {
             } while (rep.isEmpty());
             nom = rep;
         } else
-            nom = "ia" + numeroJoueur;
-        System.out.println("Quelle couleurs aura le joueurs ?");
-        do {
-            rep = sc.nextLine().strip();
-        } while (rep.isEmpty());
+            nom = "ia" + (numeroJoueur + 1);
+        String[] couleurs = { "bleu", "vert", "jaune", "rouge" };
+        // System.out.println("Quelle couleurs aura le joueurs ?");
+        // do {
+        // rep = sc.nextLine().toLowerCase().strip();
+        // } while (!rep.equals("bleu") && !rep.equals("vert") && !rep.equals("jaune")
+        // && !rep.equals("rouge"));
         if (ia)
-            return new Ia(nom, rep, p);
-        return new Joueur(nom, rep, p);
+            return new Ia(nom, couleurs[numeroJoueur], p);
+        return new Joueur(nom, couleurs[numeroJoueur], p);
     }
 
     public String choixAction(String action) {

@@ -202,16 +202,16 @@ public class Colonie {
 			}
 		}
 
-		if (locationHorizontale.equals("haut") && locationVerticale.equals("gauche")) {
+		if (locationHorizontale.equals("gauche") && locationVerticale.equals("haut")) {
 			map.put("bas droit", caseChoisi);
 		}
-		if (locationHorizontale.equals("bas") && locationVerticale.equals("gauche")) {
+		if (locationHorizontale.equals("gauche") && locationVerticale.equals("bas")) {
 			map.put("haut droit", caseChoisi);
 		}
-		if (locationHorizontale.equals("haut") && locationVerticale.equals("droit")) {
+		if (locationHorizontale.equals("droit") && locationVerticale.equals("haut")) {
 			map.put("bas gauche", caseChoisi);
 		}
-		if (locationHorizontale.equals("bas") && locationVerticale.equals("droit")) {
+		if (locationHorizontale.equals("droit") && locationVerticale.equals("bas")) {
 			map.put("haut gauche", caseChoisi);
 		}
 

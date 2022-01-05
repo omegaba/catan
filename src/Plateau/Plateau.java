@@ -212,6 +212,12 @@ public class Plateau {
             a.affiche();
             j.calculPoints();
         }
+        for (int i = 0; i < plateau.length; i++) {
+            for (int j = 0; j < plateau[i].length; j++) {
+                System.out.print(plateau[i][j] + "  |||| CASE SUIVANTE ||||");
+            }
+            System.out.println();
+        }
         for (int i = listJoueurs.size() - 1; i >= 0; i--) {
             System.out.println("Tour de:");
             listJoueurs.get(i).affiche();

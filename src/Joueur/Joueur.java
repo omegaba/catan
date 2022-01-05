@@ -22,7 +22,8 @@ public class Joueur {
 	protected final String nom;
 	protected int points;
 	protected Communication c;
-	public String couleur;
+	public final String couleur;
+	public final int chiffreCouleur;
 	protected LinkedList<Colonie> colonie;
 	protected LinkedList<CarteRessources> deckCarteRessources;
 	protected LinkedList<CarteDeveloppement> deckCarteDeveloppement;
@@ -50,6 +51,23 @@ public class Joueur {
 		nbRoutes = 13;
 		nbChevalierJouer = 0;
 		carteDev = true;
+		;
+		switch (couleur) {
+			case "bleu":
+				chiffreCouleur = 0;
+				break;
+			case "vert":
+				chiffreCouleur = 1;
+				break;
+			case "jaune":
+				chiffreCouleur = 2;
+				break;
+			case "rouge":
+				chiffreCouleur = 3;
+				break;
+			default:
+				chiffreCouleur = -1;
+		}
 	}
 
 	public void affiche() {
@@ -640,6 +658,14 @@ public class Joueur {
 
 	public LinkedList<CarteSpeciale> getCarteSpeciale() {
 		return deckCarteSpeciale;
+	}
+
+	public String getCouleur() {
+		return couleur;
+	}
+
+	public int getChiffreCouleur() {
+		return chiffreCouleur;
 	}
 
 }
