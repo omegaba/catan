@@ -40,7 +40,7 @@ public class Case {
         }
         port = null;
         MapColonie = null;
-        voleur=false;
+        voleur = false;
     }
 
     public void setPort(Port port) {
@@ -116,13 +116,13 @@ public class Case {
     public Port getPort() {
         return port;
     }
-    
-    public boolean hasVoleur(){
-    	return voleur==true;
+
+    public boolean hasVoleur() {
+        return voleur == true;
     }
-    
-    public boolean setVoleur(){
-    	this.voleur=true;
+
+    public void setVoleur(boolean present) {
+        this.voleur = present;
     }
-    
+
 }

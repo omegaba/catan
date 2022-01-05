@@ -551,6 +551,7 @@ public class Joueur {
 
 	public LinkedList<Port> getPorts() {
 		return port;
+	}
 
 	public void JouerChevalier() {
 		Scanner sc = new Scanner(System.in);

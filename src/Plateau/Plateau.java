@@ -53,8 +53,11 @@ public class Plateau {
                     int r = new Random().nextInt(jeton.size());
                     if (i != 3 || j != 2)
                         plateau[i][j] = new Case(jeton.remove(r), environment.remove(r));
-                    else
-                        plateau[i][j] = new Case(0, "Désert");
+                    else {
+                        Case c = new Case(0, "Désert");
+                        c.setVoleur(true);
+                        plateau[i][j] = c;
+                    }
                 }
             }
         }
@@ -234,27 +237,25 @@ public class Plateau {
     public LinkedList<CarteDeveloppement> getPileCarteDeveloppement() {
         return pileCarteDeveloppement;
     }
-    
-    
-    public Voleur getVoleur(){
-    	return this.voleur();
+
+    public Voleur getVoleur() {
+        return this.voleur;
     }
-    
-    
-    public void afficheJoueur(){
-    	for (Joueur j: listJoueurs){
-    		for(Colonie c : j.getColonie()){
-    			for(var v: c.getCaseAdja().entrySet()){
-    				if((v.getValue().hasVoleur())){
-    					j.affiche();
-    				}
-    			}	
-    		}
-    	}
+
+    public void afficheJoueur() {
+        for (Joueur j : listJoueurs) {
+            for (Colonie c : j.getColonie()) {
+                for (var v : c.getCaseAdja().entrySet()) {
+                    if ((v.getValue().hasVoleur())) {
+                        j.affiche();
+                    }
+                }
+            }
+        }
     }
 
     public LinkedList<Joueur> getlistJoueur() {
-        return  listJoueurs;
+        return listJoueurs;
     }
 
 }

@@ -25,6 +25,7 @@ public class Voleur {
 	}
 
 	public void placer() {
+		emplacement.setVoleur(false);
 		Scanner sc = new Scanner(System.in);
 		String s = sc.nextLine();
 		System.out.println("Donnez les coordonnées de la case  où vous voulez placer le voleur");
@@ -34,7 +35,7 @@ public class Voleur {
 		int j = Integer.parseInt(tab[1]);
 		Case c = p.getPlateau()[i][j];
 		this.emplacement = c;
-		c.setVoleur();
+		c.setVoleur(true);
 	}
 
 }
