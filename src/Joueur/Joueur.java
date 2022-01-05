@@ -324,18 +324,24 @@ public class Joueur {
 	}
 
 	public void construireColonie() {
-		System.out.println("Matériaux utilisés pour la construction: Argile(1) , Bois(1), Laine(1), Blé(1)\n");
-		if (!aRessource("colonie")) {
-			System.out.println("Vous n'avez pas les ressource necéssaires pour construire une colonie");
-		} else {
-			perdreRessource("Argile", 1);
-			perdreRessource("Bois", 1);
-			perdreRessource("Laine", 1);
-			perdreRessource("Ble", 1);
-			Colonie col = new Colonie(this, false, this.plateau);
-			col.placer();
-			this.colonie.add(col);
-		}
+		System.out.println(
+				"Matériaux utilisés pour la construction: Argile(1) , Bois(1), Laine(1), Blé(1)\nEt voici le nombre de colonie que vous pouvez encore construire "
+						+ nbColonies + "\n");
+		if (nbColonies != 0) {
+			if (!aRessource("colonie")) {
+				System.out.println("Vous n'avez pas les ressource necéssaires pour construire une colonie");
+			} else {
+				perdreRessource("Argile", 1);
+				perdreRessource("Bois", 1);
+				perdreRessource("Laine", 1);
+				perdreRessource("Ble", 1);
+				Colonie col = new Colonie(this, false, this.plateau);
+				col.placer();
+				this.colonie.add(col);
+				nbColonies--;
+			}
+		} else
+			System.out.println("Vous avez déjà le nombre maximum de colonies");
 	}
 
 	public void construireVille() {
@@ -349,18 +355,39 @@ public class Joueur {
 		System.out.println(listColonie);
 		// associer le numéro demandé et la colonie correspondant dans la list
 		int colonieUprage = c.choixColonieUpgrade(compteur);
-		System.out.println("Matériaux utilisés pour la construction: Minerai(3), Blé(2)\n");
-		if (!aRessource("ville")) {
-			System.out.println("Vous n'avez pas les ressource necéssaires pour construire une ville");
-		} else {
-			perdreRessource("Minerai", 3);
-			perdreRessource("Ble", 2);
-			colonie.get(colonieUprage).upgrade();
-		}
+		System.out.println(
+				"Matériaux utilisés pour la construction: Minerai(3), Blé(2)\nEt voici le nombre de villes que vous pouvez encore construire "
+						+ nbVilles + "\n");
+		if (nbVilles != 0) {
+			if (!aRessource("ville")) {
+				System.out.println("Vous n'avez pas les ressource necéssaires pour construire une ville");
+			} else {
+				perdreRessource("Minerai", 3);
+				perdreRessource("Ble", 2);
+				colonie.get(colonieUprage).upgrade();
+				nbVilles--;
+				nbRoutes++;
+			}
+		} else
+			System.out.println("Vous avez déjà le nombre maximum de villes.");
 	}
 
 	public void construireRoute() {
-
+		System.out.println(
+				"Matériaux utilisés pour la construction: Argile(1), Bois(1)\nEt voici le nombre de route que vous pouvez encore construire "
+						+ nbRoutes + "\n");
+		if (nbRoutes != 0) {
+			if (!aRessource("route"))
+				System.out.println("Vous n'avez pas les ressources necéssaires pour construire une route");
+			else {
+				perdreRessource("argile", 1);
+				perdreRessource("bois", 1);
+				Route r = new Route(this, plateau);
+				r.placer();
+				nbRoutes--;
+			}
+		} else
+			System.out.println("Vous avez déjà le nombre maximum de routes.");
 	}
 
 	public void recevoirRessource(String ressource, int n) {
@@ -390,10 +417,11 @@ public class Joueur {
 		return false;
 	}
 
-	public void commerce(String taux) { // rajouter l'option d'arreter le commerce
-		int nbArgile = nbRessource("Argile");
-		int nbBois = nbRessource("Bois");
-		int nbLaine = nbRessource("Laine");
+	int nbArgile = nbRessource("Argile");
+	int nbBois = nbRessource("Bois");
+	int nbLaine = nbRessource("Laine");
+
+	public void commerce(String taux) {
 		int nbBle = nbRessource("Ble");
 		int nbMinerai = nbRessource("Minerai");
 		int t = Integer.parseInt(taux.split(":")[0]);
@@ -516,6 +544,13 @@ public class Joueur {
 	public String getNom() {
 		return nom;
 	}
+
+	public Plateau getPlateau() {
+		return plateau;
+	}
+
+	public LinkedList<Port> getPorts() {
+		return port;
 
 	public void JouerChevalier() {
 		Scanner sc = new Scanner(System.in);
