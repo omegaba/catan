@@ -82,17 +82,28 @@ public class Vue extends JPanel {
 
     }
 
-    /*
-     * public void initCenter(){
-     * JPanel center= new JPanel();
-     * center.setLayout(new GridBagLayout());
-     * GridBagConstraints carre= new GridBagConstraints();
-     * carre.gridx=1;
-     * carre.gridy=0;
-     * if(model.getnbJoueur() >1){
-     * 
-     * }
-     */
+    
+      public void initCenter(){
+      JPanel center= new JPanel();
+      center.setLayout(new GridBagLayout());
+      GridBagConstraints carre= new GridBagConstraints();
+      carre.gridx=1;
+      carre.gridy=0;
+      if(model.getListJoueurs().size()>2){
+        center.add(new InfrastructurePanel(model.getListJoueurs().get(2),true));
+      }
+      carre.gridx=0;
+      carre.gridy+=1;
+
+      if(model.getListJoueurs().size()>3){
+          center.add(new InfrastructurePanel(model.getListJoueurs().get(3),false));
+      }
+      carre.gridx+=1;
+      carre.gridy=1;
+
+      center.add(new )
+    }
+     
 
     public class ChoiceHandler implements ActionListener {
 
@@ -361,6 +372,45 @@ public class Vue extends JPanel {
         }
     }
 
+    public class InfrastructurePanel extends JPanel {
+        private final Joueur joueur;
+        private final JLabel colonies;
+        private final JLabel villes;
+        private final JLabel routes;
+
+        public InfrastructurePanel(Joueur joueur, boolean location){
+            this.joueur= joueur;
+            colonies= new JLabel();
+            villes=new JLabel();
+            routes= new JLabel();
+
+            if(location){
+                setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+            }
+
+            add(colonies);
+            add(villes);
+            add(routes);
+            setBackground(Color.cyan);
+            colonies.setForeground(Color.white);
+            villes.setForeground(Color.white);
+            routes.setForeground(Color.white);
+            description();
+        }
+
+
+        public void description(){
+            colonies.setText(joueur.getNbColonie() + " colonies");
+            villes.setText(joueur.getNbVilles() + " villes");
+            routes.setText(joueur.getNbRoutes() + " routes");
+        }
+
+        public void paintComponent(Graphics g) {
+            description();
+            super.paintComponent(g);
+        }
+    }
+
     public class FenetreDialog extends JDialog {
         private final Component fenetre;
 
@@ -391,4 +441,10 @@ public class Vue extends JPanel {
             super.repaint();
         }
     }
+
+    public class PanelPlateau{
+        
+    }
+
+    
 }

@@ -234,33 +234,31 @@ public class Plateau {
     public LinkedList<CarteDeveloppement> getPileCarteDeveloppement() {
         return pileCarteDeveloppement;
     }
-    
-    
-    public Voleur getVoleur(){
-    	return this.voleur();
+
+    public Voleur getVoleur() {
+        return this.voleur();
     }
-    
-    
-    public void afficheJoueur(){
-    	for (Joueur j: listJoueurs){
-    		for(Colonie c : j.getColonie()){
-    			for(var v: c.getCaseAdja().entrySet()){
-    				if((v.getValue().hasVoleur())){
-    					j.affiche();
-    				}
-    			}	
-    		}
-    	}
+
+    public void afficheJoueur() {
+        for (Joueur j : listJoueurs) {
+            for (Colonie c : j.getColonie()) {
+                for (var v : c.getCaseAdja().entrySet()) {
+                    if ((v.getValue().hasVoleur())) {
+                        j.affiche();
+                    }
+                }
+            }
+        }
     }
 
     public LinkedList<Joueur> getlistJoueur() {
-        return  listJoueurs;
+        return listJoueurs;
     }
 
-    public int getNombreJoueur(){
-        int i=0;
-        for(Joueur j : listJoueurs){
-            i+=1;
+    public int getNombreJoueur() {
+        int i = 0;
+        for (Joueur j : listJoueurs) {
+            i += 1;
         }
         return i;
     }

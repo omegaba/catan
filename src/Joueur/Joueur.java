@@ -47,6 +47,7 @@ public class Joueur {
 		nbRoutes = 15;
 		nbChevalierJouer = 0;
 	}
+
 	public void affiche() {
 		System.out.println("Nom :" + this.nom + ", couleur " + this.couleur);
 		System.out.println("Nombre de point : " + this.points);
@@ -60,9 +61,9 @@ public class Joueur {
 	}
 
 	public int nbCarteRessources() {
-		int i=0;
-		for(CarteRessources c : deckCarteRessources){
-			i+=1;
+		int i = 0;
+		for (CarteRessources c : deckCarteRessources) {
+			i += 1;
 		}
 		return i;
 	}
@@ -557,7 +558,7 @@ public class Joueur {
 	}
 
 	public LinkedList<Port> getPorts() {
-		return port;	
+		return port;
 	}
 
 	public void JouerChevalier() {
@@ -629,4 +630,15 @@ public class Joueur {
 		return this.colonie;
 	}
 
+	public int getNbColonie() {
+		return this.nbColonies;
+	}
+
+	public int getNbVilles() {
+		return this.nbVilles;
+	}
+
+	public int getNbRoutes() {
+		return this.nbRoutes;
+	}
 }
