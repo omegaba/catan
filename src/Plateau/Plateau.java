@@ -178,15 +178,15 @@ public class Plateau {
         for (Joueur j : listJoueurs) {
             Colonie c = new Colonie(j, false, this);
             c.placerPremierTour();
-            Route r = new Route(j);
-            r.placer();
+            Route r = new Route(j, this);
+            r.placerPremierTours(c);
             a.affiche();
         }
         for (int i = listJoueurs.size() - 1; i >= 0; i--) {
             Colonie c = new Colonie(listJoueurs.get(i), false, this);
             c.placerPremierTour();
-            Route r = new Route(listJoueurs.get(i));
-            r.placer();
+            Route r = new Route(listJoueurs.get(i), this);
+            r.placerPremierTours(c);
             a.affiche();
         }
     }
@@ -206,7 +206,7 @@ public class Plateau {
         for (int i = 0; i < plateau.length; i++) {
             for (int j = 0; j < plateau[i].length; j++) {
                 if (plateau[i][j].getNumero() == resultatDe) {
-                    HashMap<String, Colonie> listColonieCase = plateau[i][j].getColonie();
+                    HashMap<String, Colonie> listColonieCase = plateau[i][j].getMapColonie();
                     for (var c : listColonieCase.entrySet()) {
                         c.getValue().getJoueur().recevoirRessource(plateau[i][j].getRessource(),
                                 c.getValue().getNbrRessource());

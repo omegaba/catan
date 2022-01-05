@@ -143,4 +143,36 @@ public class Communication {
         return Integer.parseInt(rep) - 1;
     }
 
+    public String choixPlacementRoute() {
+        System.out.println("Où voulez-vous placer votre route");
+        String rep;
+        int i;
+        int j;
+        do {
+            rep = sc.nextLine().toLowerCase().replaceAll("\\s+", " ").strip();
+            i = Integer.parseInt(rep.substring(0, 1));
+            j = Integer.parseInt(rep.substring(1, 2));
+        } while (i <= 0 || i >= 5 || j <= 0 || j >= 5);
+        return rep;
+    }
+
+    public String choixLocationDeLaRoute(String s) {
+        System.out.println(s);
+        String rep;
+        do {
+            rep = sc.nextLine().toLowerCase().replaceAll("\\s+", " ").strip();
+        } while (!rep.equals("haut") && !rep.equals("droit") && !rep.equals("bas")
+                && !rep.equals("gauche"));
+        return rep;
+    }
+
+    public boolean continuerPlacement(String s) {
+        System.out.println("Vous ne pouvez pas placer " + s + " ici. Voulez-vous essayer un autre endroit ?");
+        String rep;
+        do {
+            rep = sc.nextLine().toLowerCase().replaceAll("\\s+", " ").strip();
+        } while (!rep.equals("oui") && !rep.equals("non"));
+        return rep.equals("oui");
+    }
+
 }

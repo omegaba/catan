@@ -5,7 +5,6 @@ import Plateau.Plateau;
 import Plateau.Composants.Case;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import Jeu.Communication;
 
 public class Colonie {
@@ -40,81 +39,202 @@ public class Colonie {
 		int i = Integer.parseInt(tab[0]);
 		int j = Integer.parseInt(tab[1]);
 		Case caseChoisi = plateau.getPlateau()[i][j];
-		System.out.println(
-				"Dans quelle partie de la case voulez-vous placer votre colonie ?  haut gauche ?  bas gauche ? haut droit ? bas droit ?");
-		if (!caseChoisi.estEmplacementLibre()) {
-			System.out.println("Cet emplacement est déjà occupé");
-			// faire en sorte que le joueur puisse choisir un autre emplacement;
-		}
-
-		else {
-			String location = c.choixLocationDeLaColonie();
-			String[] decoupe = decoupe(location);
-			String locationHorizontale = decoupe[1];
-			String locationVerticale = decoupe[0];
-			HashMap<String, Case> map = new HashMap<>();
-			String inverseLh, inverseLv;
-			if (locationHorizontale.equals("gauche")) {
-				inverseLh = "droite";
+		String location = c.choixLocationDeLaColonie();
+		boolean placementOk = false;
+		int essai = 0;
+		while (!placementOk) {
+			if (essai != 0) {
+				CaseLocation = c.choixPlacementColonie();
+				tab = decoupe(CaseLocation);
+				i = Integer.parseInt(tab[0]);
+				j = Integer.parseInt(tab[1]);
+				caseChoisi = plateau.getPlateau()[i][j];
+				location = c.choixLocationDeLaColonie();
+			}
+			if (placementPossible(caseChoisi, location)) {
+				placement(caseChoisi, location);
+				placementOk = true;
 			} else {
-				inverseLh = "gauche";
+				placementOk = !c.continuerPlacement("de colonie");
+				essai++;
 			}
-
-			if (locationVerticale.equals("bas")) {
-				inverseLv = "haut";
-			} else {
-				inverseLv = "bas";
-			}
-
-			for (var v : caseChoisi.getMap().entrySet()) {
-				if (v.getKey().equals(location)) {
-					map.put(location, v.getValue());
-				}
-				if (v.getKey().equals(locationHorizontale)) {
-					map.put(inverseLv + " " + locationHorizontale, v.getValue());
-				}
-				if (v.getKey().equals(locationVerticale)) {
-					map.put(locationVerticale + " " + inverseLh, v.getValue());
-				}
-			}
-
-			if (locationHorizontale.equals("haut") && locationVerticale.equals("gauche")) {
-				map.put("bas droit", caseChoisi);
-			}
-			if (locationHorizontale.equals("bas") && locationVerticale.equals("gauche")) {
-				map.put("haut droit", caseChoisi);
-			}
-			if (locationHorizontale.equals("haut") && locationVerticale.equals("droit")) {
-				map.put("bas gauche", caseChoisi);
-			}
-			if (locationHorizontale.equals("bas") && locationVerticale.equals("droit")) {
-				map.put("haut gauche", caseChoisi);
-			}
-
-			setMapColonie();
-			this.case_adja = map;
 		}
-
 	}
 
-	/*
-	 * public boolean hasColonie(String str){
-	 * String[] decoupe =decoupe(str);
-	 * int i=Integer.parseInt(decoupe[0]);
-	 * int j=Integer.parseInt(decoupe[1]);
-	 * if(!plateau[i][j].hasColonie()){
-	 * return false;
-	 * }
-	 * return true;
-	 * }
-	 * 
-	 * public void remplaceColonie(String location, Colonie c){
-	 * String[] decoupe =decoupe(str);
-	 * int i=Integer.parseInt(decoupe[0]);
-	 * int j=Integer.parseInt(decoupe[1]);
-	 * plateau[i][j].setColonie(c);
-	 * }
-	 */
+	public boolean placementPossible(Case caseChoisi, String location) {
+		boolean ok = false;
+		HashMap<String, Colonie> MapColonie = caseChoisi.getMapColonie();
+		HashMap<String, Case> caseAdja = caseChoisi.getMap();
+		Case adja = caseAdja.get(location);
+		HashMap<String, Colonie> mapColonieAdja = adja.getMapColonie();
+		if (MapColonie.get(location) == null) {
+			switch (location) {
+				case "bas gauche":
+					if ((caseChoisi.getRoute("gauche") != null
+							&& caseChoisi.getRoute("gauche").getJoueur() == joueur)
+							|| (caseChoisi.getRoute("bas") != null && caseChoisi.getRoute("bas").getJoueur() == joueur)
+							|| (adja.getRoute("haut") != null
+									&& adja.getRoute("haut").getJoueur() == joueur)
+							|| (adja.getRoute("droit") != null && adja.getRoute("droit").getJoueur() == joueur)) {
+						ok = (MapColonie.get("haut gauche") == null && MapColonie.get("bas droit") == null
+								&& mapColonieAdja.get("haut gauche") == null
+								&& mapColonieAdja.get("bas droit") == null);
+					}
+					break;
+				case "haut gauche":
+					if ((caseChoisi.getRoute("gauche") != null
+							&& caseChoisi.getRoute("gauche").getJoueur() == joueur)
+							|| (caseChoisi.getRoute("haut") != null
+									&& caseChoisi.getRoute("haut").getJoueur() == joueur)
+							|| (adja.getRoute("bas") != null
+									&& adja.getRoute("bas").getJoueur() == joueur)
+							|| (adja.getRoute("droit") != null && adja.getRoute("droit").getJoueur() == joueur)) {
+						ok = (MapColonie.get("bas gauche") == null && MapColonie.get("haut droit") == null
+								&& mapColonieAdja.get("bas gauche") == null
+								&& mapColonieAdja.get("haut droit") == null);
+					}
+					break;
+				case "bas droit":
+					if ((caseChoisi.getRoute("droit") != null
+							&& caseChoisi.getRoute("droit").getJoueur() == joueur)
+							|| (caseChoisi.getRoute("bas") != null && caseChoisi.getRoute("bas").getJoueur() == joueur)
+							|| (adja.getRoute("haut") != null
+									&& adja.getRoute("haut").getJoueur() == joueur)
+							|| (adja.getRoute("gauche") != null && adja.getRoute("gauche").getJoueur() == joueur)) {
+						ok = (MapColonie.get("haut droit") == null && MapColonie.get("bas gauche") == null
+								&& mapColonieAdja.get("haut droit") == null
+								&& mapColonieAdja.get("bas gauche") == null);
+					}
+					break;
+				case "haut droit":
+					if ((caseChoisi.getRoute("droit") != null
+							&& caseChoisi.getRoute("droit").getJoueur() == joueur)
+							|| (caseChoisi.getRoute("haut") != null
+									&& caseChoisi.getRoute("haut").getJoueur() == joueur)
+							|| (adja.getRoute("bas") != null
+									&& adja.getRoute("bas").getJoueur() == joueur)
+							|| (adja.getRoute("gauche") != null && adja.getRoute("gauche").getJoueur() == joueur)) {
+						ok = (MapColonie.get("haut gauche") == null && MapColonie.get("bas droit") == null
+								&& mapColonieAdja.get("haut gauche") == null
+								&& mapColonieAdja.get("bas droit") == null);
+					}
+					break;
+			}
+		}
+		return ok;
+	}
+
+	public void placerPremierTour() {
+		String CaseLocation = c.choixPlacementColonie();
+		String[] tab = decoupe(CaseLocation);
+		int i = Integer.parseInt(tab[0]);
+		int j = Integer.parseInt(tab[1]);
+		Case caseChoisi = plateau.getPlateau()[i][j];
+		String location = c.choixLocationDeLaColonie();
+		boolean placementOk = false;
+		int essai = 0;
+		while (!placementOk) {
+			if (essai != 0) {
+				CaseLocation = c.choixPlacementColonie();
+				tab = decoupe(CaseLocation);
+				i = Integer.parseInt(tab[0]);
+				j = Integer.parseInt(tab[1]);
+				caseChoisi = plateau.getPlateau()[i][j];
+				location = c.choixLocationDeLaColonie();
+			}
+			if (placementOkPremierTours(caseChoisi, location)) {
+
+				placementOk = true;
+			} else {
+				System.out
+						.println("Vous ne pouvez pas placer votre colonie ici, veuillez choisir un autre emplacement.");
+				essai++;
+			}
+		}
+	}
+
+	public void placement(Case caseChoisi, String location) {
+		String[] decoupe = decoupe(location);
+		String locationHorizontale = decoupe[1];
+		String locationVerticale = decoupe[0];
+		HashMap<String, Case> map = new HashMap<>();
+		String inverseLh, inverseLv;
+		if (locationHorizontale.equals("gauche")) {
+			inverseLh = "droite";
+		} else {
+			inverseLh = "gauche";
+		}
+
+		if (locationVerticale.equals("bas")) {
+			inverseLv = "haut";
+		} else {
+			inverseLv = "bas";
+		}
+
+		for (var v : caseChoisi.getMap().entrySet()) {
+			if (v.getKey().equals(location)) {
+				map.put(location, v.getValue());
+			}
+			if (v.getKey().equals(locationHorizontale)) {
+				map.put(inverseLv + " " + locationHorizontale, v.getValue());
+			}
+			if (v.getKey().equals(locationVerticale)) {
+				map.put(locationVerticale + " " + inverseLh, v.getValue());
+			}
+		}
+
+		if (locationHorizontale.equals("haut") && locationVerticale.equals("gauche")) {
+			map.put("bas droit", caseChoisi);
+		}
+		if (locationHorizontale.equals("bas") && locationVerticale.equals("gauche")) {
+			map.put("haut droit", caseChoisi);
+		}
+		if (locationHorizontale.equals("haut") && locationVerticale.equals("droit")) {
+			map.put("bas gauche", caseChoisi);
+		}
+		if (locationHorizontale.equals("bas") && locationVerticale.equals("droit")) {
+			map.put("haut gauche", caseChoisi);
+		}
+
+		setMapColonie();
+		this.case_adja = map;
+
+		if (caseChoisi.hasPort()) {
+			joueur.getPorts().add(caseChoisi.getPort());
+		}
+	}
+
+	public boolean placementOkPremierTours(Case caseChoisi, String location) {
+		boolean ok = false;
+		HashMap<String, Colonie> MapColonie = caseChoisi.getMapColonie();
+		HashMap<String, Colonie> mapColonieAdja;
+		HashMap<String, Case> caseAdja = caseChoisi.getMap();
+		Case adja = caseAdja.get(location);
+		if (MapColonie.get(location) == null) {
+			switch (location) {
+				case "haut droit":
+				case "bas gauche":
+					mapColonieAdja = adja.getMapColonie();
+					ok = (MapColonie.get("haut gauche") == null && MapColonie.get("bas droit") == null
+							&& mapColonieAdja.get("haut gauche") == null
+							&& mapColonieAdja.get("bas droit") == null);
+					break;
+				case "haut gauche":
+					mapColonieAdja = adja.getMapColonie();
+					ok = (MapColonie.get("bas gauche") == null && MapColonie.get("haut droit") == null
+							&& mapColonieAdja.get("bas gauche") == null
+							&& mapColonieAdja.get("haut droit") == null);
+					break;
+				case "bas droit":
+					mapColonieAdja = adja.getMapColonie();
+					ok = (MapColonie.get("haut droit") == null && MapColonie.get("bas gauche") == null
+							&& mapColonieAdja.get("haut droit") == null
+							&& mapColonieAdja.get("bas gauche") == null);
+					break;
+			}
+		}
+		return ok;
+	}
 
 	public void setMapColonie() {
 		for (var v : case_adja.entrySet()) {

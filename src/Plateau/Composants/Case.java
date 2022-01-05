@@ -10,7 +10,7 @@ import Plateau.Infrastructures.Colonie;
 public class Case {
     private final int numero;
     private final String environement, production;
-    private Route nord, est, sud, ouest;
+    private Route haut, droit, bas, gauche;
     private Port port;
     private HashMap<String, Case> case_Adja = new HashMap<>();
     private HashMap<String, Colonie> MapColonie = new HashMap<>();
@@ -45,45 +45,36 @@ public class Case {
         this.port = port;
     }
 
-    void setRoute(String location, Route route) {
+    public void setRoute(String location, Route route) {
         switch (location) {
-            case "nord":
-                nord = route;
+            case "haut":
+                haut = route;
                 break;
-            case "est":
-                est = route;
+            case "droit":
+                droit = route;
                 break;
-            case "sud":
-                sud = route;
+            case "bas":
+                bas = route;
                 break;
-            case "ouest":
-                ouest = route;
+            case "gauche":
+                gauche = route;
         }
     }
 
-    Route getRoute(String location) {
+    public Route getRoute(String location) {
         switch (location) {
-            case "nord":
-                return nord;
-            case "est":
-                return est;
-            case "sud":
-                return sud;
-            case "ouest":
-                return ouest;
+            case "haut":
+                return haut;
+            case "droit":
+                return droit;
+            case "bas":
+                return bas;
+            case "gauche":
+                return gauche;
             default:
                 return null;
         }
     }
-
-    // public boolean estEmplacementLibre() {
-    //     if (this.MapColonie == null && pretDeRouteAlie() && deuxColonieDedistance()) { // pretDeRouteAlie() : methode qui
-    //                                                                                 // check si on est pret d'une route
-    //                                                                                 // aliée
-    //         return true;
-    //     }
-    //     return false;
-    // }
 
     public String toString() {
         return "  " + numero + "  " + environement.substring(0, 2);
@@ -114,5 +105,13 @@ public class Case {
             return true;
         }
         return false;
+    }
+
+    public boolean hasPort() {
+        return port != null;
+    }
+
+    public Port getPort() {
+        return port;
     }
 }
