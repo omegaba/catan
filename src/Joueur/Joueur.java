@@ -292,6 +292,37 @@ public class Joueur {
 		return true;
 	}
 
+	public boolean aRessource(String str, int n) {
+		int nbArgile = nbRessource("Argile");
+		int nbBois = nbRessource("Bois");
+		int nbLaine = nbRessource("Laine");
+		int nbBle = nbRessource("Ble");
+		int nbMinerai = nbRessource("Minerai");
+		switch (str) {
+			case "Bois":
+				if (nbBois < n) {
+					return false;
+				}
+			case "Argile":
+				if (nbArgile < n) {
+					return false;
+				}
+			case "Ble":
+				if (nbBle < n) {
+					return false;
+				}
+			case "Minerai":
+				if (nbMinerai < n) {
+					return false;
+				}
+			case "Laine":
+				if (nbLaine < n) {
+					return false;
+				}
+		}
+		return true;
+	}
+
 	public void construireColonie() {
 		System.out.println(
 				"Matériaux utilisés pour la construction: Argile(1) , Bois(1), Laine(1), Blé(1)\nEt voici le nombre de colonie que vous pouvez encore construire "
@@ -520,6 +551,74 @@ public class Joueur {
 
 	public LinkedList<Port> getPorts() {
 		return port;
+
+	public void JouerChevalier() {
+		Scanner sc = new Scanner(System.in);
+		String s = sc.nextLine();
+		System.out.println("Vous avez la possibilité de déplacer le voleur");
+		plateau.getVoleur().placer();
+		System.out.println(
+				"Vous avez la possibilité de récupérer une matière première d'un joueur ayant une colonie qui jouxte l'emplacement  du voleur");
+		System.out.println("Voici la liste des joueurs qui ont des colonies près de l'emplacement du voleur:");
+		plateau.afficheJoueur();
+		System.out.println("Veuillez saisir le nom d'un joueur ");
+		String Jnom = sc.nextLine();
+		Joueur player = new Joueur(null, false, "", null);
+		for (Joueur j : plateau.getlistJoueur()) {
+			if (j.getNom().equals(Jnom)) {
+				player = j;
+			}
+		}
+		System.out.println("une ressource vous sera donné au hasard");
+		Random r = new Random();
+		int x = r.nextInt(5);
+		switch (x) {
+			case 0:
+				if (!player.aRessource("Bois", 1)) {
+					System.out.println("Ce joueur n'a pas assez de bois");
+				} else {
+					player.perdreRessource("Bois", 1);
+					recevoirRessource("Bois", 1);
+					System.out.println("une ressource de bois vous à été donnée");
+				}
+			case 1:
+				if (!player.aRessource("Argile", 1)) {
+					System.out.println("Ce joueur n'a pas assez d'Argile");
+				} else {
+					player.perdreRessource("Argile", 1);
+					recevoirRessource("Argile", 1);
+					System.out.println("une ressource d'argile vous à été donnée");
+				}
+			case 2:
+				if (!player.aRessource("Ble", 1)) {
+					System.out.println("Ce joueur n'a pas assez de ble");
+				} else {
+					player.perdreRessource("Ble", 1);
+					recevoirRessource("Ble", 1);
+					System.out.println("une ressource de ble vous à été donnée");
+				}
+			case 3:
+				if (!player.aRessource("Minerai", 1)) {
+					System.out.println("Ce joueur n'a pas assez de Minerai");
+				} else {
+					player.perdreRessource("Minerai", 1);
+					recevoirRessource("Minerai", 1);
+					System.out.println("une ressource de minerai vous à été donnée");
+				}
+			case 4:
+				if (!player.aRessource("Laine", 1)) {
+					System.out.println("Ce joueur n'a pas assez de laine");
+				} else {
+					player.perdreRessource("Laine", 1);
+					recevoirRessource("Laine", 1);
+					System.out.println("une ressource de laine vous à été donnée");
+				}
+		}
+
+	}
+
+	public LinkedList<Colonie> getColonie() {
+		return this.colonie;
 	}
 
 }
