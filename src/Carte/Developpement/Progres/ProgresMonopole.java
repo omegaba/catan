@@ -22,7 +22,7 @@ public class ProgresMonopole extends Progres {
             if (j != joueur) {
                 int nbR = 0;
                 for (CarteRessources cr : j.getDeckCarteRessources()) {
-                    if (cr.getNom().equals(ressource))
+                    if (cr.getNom().equalsIgnoreCase(ressource))
                         nbR++;
                 }
                 j.perdreRessource(ressource, nbR);

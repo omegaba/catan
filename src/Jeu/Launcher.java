@@ -5,6 +5,8 @@ import Plateau.Plateau;
 public class Launcher {
     public static void main(String[] args) {
 
+        // Joueur j = new Joueur("test", "false", new Plateau());
+
         Communication c = new Communication();
         if (c.choixPartie().equals("textuel"))
             jeuText();
@@ -22,6 +24,11 @@ public class Launcher {
             a.affiche();
             p.tour();
         }
+        System.out.println(
+                "Bravo à " + p.getListJoueurs().get(p.getNumeroJoueur()).getNom() + " !! Qui à gagner la partie avec "
+                        + p
+                                .getListJoueurs().get(p.getNumeroJoueur()).getPoints()
+                        + " points.");
     }
 
     static void jeuGraph() {

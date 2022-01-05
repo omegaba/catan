@@ -2,6 +2,7 @@ package Jeu;
 
 import java.util.Scanner;
 
+import Joueur.Ia;
 import Joueur.Joueur;
 import Plateau.Plateau;
 
@@ -51,7 +52,9 @@ public class Communication {
         do {
             rep = sc.nextLine().strip();
         } while (rep.isEmpty());
-        return new Joueur(nom, ia, rep, p);
+        if (ia)
+            return new Ia(nom, rep, p);
+        return new Joueur(nom, rep, p);
     }
 
     public String choixAction(String action) {
@@ -99,8 +102,14 @@ public class Communication {
         int j;
         do {
             rep = sc.nextLine().toLowerCase().replaceAll("\\s+", " ").strip();
-            i = Integer.parseInt(rep.substring(0, 1));
-            j = Integer.parseInt(rep.substring(1, 2));
+            if (rep.length() != 3) {
+                i = -1;
+                j = -1;
+            } else {
+                i = Integer.parseInt(rep.substring(0, 1));
+                j = Integer.parseInt(rep.substring(2, 3));
+            }
+            System.out.println(rep);
         } while (i <= 0 || i >= 5 || j <= 0 || j >= 5);
         return rep;
     }
@@ -151,7 +160,7 @@ public class Communication {
         do {
             rep = sc.nextLine().toLowerCase().replaceAll("\\s+", " ").strip();
             i = Integer.parseInt(rep.substring(0, 1));
-            j = Integer.parseInt(rep.substring(1, 2));
+            j = Integer.parseInt(rep.substring(2, 3));
         } while (i <= 0 || i >= 5 || j <= 0 || j >= 5);
         return rep;
     }

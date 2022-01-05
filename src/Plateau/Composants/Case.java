@@ -5,7 +5,6 @@ import java.util.HashMap;
 import Plateau.Infrastructures.Colonie;
 import Plateau.Infrastructures.Port;
 import Plateau.Infrastructures.Route;
-import Plateau.Infrastructures.Colonie;
 
 public class Case {
     private final int numero;
@@ -39,7 +38,8 @@ public class Case {
                 production = "";
         }
         port = null;
-        MapColonie = null;
+        MapColonie = new HashMap<>();
+        case_Adja = new HashMap<>();
         voleur = false;
     }
 

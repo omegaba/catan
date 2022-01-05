@@ -8,6 +8,6 @@ public class Chevalier extends CarteDeveloppement {
     }
 
     public void jouerChevalier() {
-        // deplacer voleur
+        joueur.JouerChevalier();
     }
 }
