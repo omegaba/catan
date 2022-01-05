@@ -1,6 +1,7 @@
 package Plateau.Infrastructures;
 
 import java.util.HashMap;
+import java.util.Random;
 
 import Jeu.Communication;
 import Joueur.Joueur;
@@ -19,6 +20,7 @@ public class Route {
         this.joueur = joueur;
         // routeLiee = new LinkedList<>();
         plateau = p;
+        c = new Communication();
     }
 
     public void placer() {
@@ -42,43 +44,47 @@ public class Route {
                         "Dans quelle partie de la case voulez-vous placer votre route ?  haut ?  droit ? bas ? gauche ?");
             }
             if (placementPossible(caseChoisi, location)) {
-                caseChoisi.setRoute(location, this);
-                HashMap<String, Case> caseAdja;
-                switch (location) {
-                    case "bas":
-                        caseAdja = caseChoisi.getMap();
-                        for (var e : caseAdja.entrySet()) {
-                            if (e.getKey().equals("bas"))
-                                e.getValue().setRoute("haut", this);
-                        }
-                        break;
-                    case "haut":
-                        caseAdja = caseChoisi.getMap();
-                        for (var e : caseAdja.entrySet()) {
-                            if (e.getKey().equals("haut"))
-                                e.getValue().setRoute("bas", this);
-                        }
-                        break;
-                    case "gauche":
-                        caseAdja = caseChoisi.getMap();
-                        for (var e : caseAdja.entrySet()) {
-                            if (e.getKey().equals("gauche"))
-                                e.getValue().setRoute("droit", this);
-                        }
-                        break;
-                    case "droit":
-                        caseAdja = caseChoisi.getMap();
-                        for (var e : caseAdja.entrySet()) {
-                            if (e.getKey().equals("droit"))
-                                e.getValue().setRoute("gauche", this);
-                        }
-                        break;
-                }
+                placement(caseChoisi, location);
                 placementOk = true;
             } else {
                 placementOk = !c.continuerPlacement("de route");
                 essai++;
             }
+        }
+    }
+
+    public void placement(Case caseChoisi, String location) {
+        caseChoisi.setRoute(location, this);
+        HashMap<String, Case> caseAdja;
+        switch (location) {
+            case "bas":
+                caseAdja = caseChoisi.getMap();
+                for (var e : caseAdja.entrySet()) {
+                    if (e.getKey().equals("bas"))
+                        e.getValue().setRoute("haut", this);
+                }
+                break;
+            case "haut":
+                caseAdja = caseChoisi.getMap();
+                for (var e : caseAdja.entrySet()) {
+                    if (e.getKey().equals("haut"))
+                        e.getValue().setRoute("bas", this);
+                }
+                break;
+            case "gauche":
+                caseAdja = caseChoisi.getMap();
+                for (var e : caseAdja.entrySet()) {
+                    if (e.getKey().equals("gauche"))
+                        e.getValue().setRoute("droit", this);
+                }
+                break;
+            case "droit":
+                caseAdja = caseChoisi.getMap();
+                for (var e : caseAdja.entrySet()) {
+                    if (e.getKey().equals("droit"))
+                        e.getValue().setRoute("gauche", this);
+                }
+                break;
         }
     }
 
@@ -207,9 +213,18 @@ public class Route {
         return ok;
     }
 
-    public void placerPremierTours(Colonie colonie) {
-        String placementRoute = c.choixLocationDeLaRoute(
-                "Par rapport à la colonie que vous venez de placer, où voulez-vous placer votre route ? haut ? droit ? bas ? gauche ?");
+    public void placerPremierTours(Colonie colonie, boolean ia) {
+        String placementRoute = "";
+        if (!ia)
+            placementRoute = c.choixLocationDeLaRoute(
+                    "Par rapport à la colonie que vous venez de placer, où voulez-vous placer votre route ? haut ? droit ? bas ? gauche ?");
+        else {
+            Random rd = new Random();
+            String[] locationRoute = { "haut", "droit", "bas", "gauche" };
+            placementRoute = locationRoute[rd.nextInt(4)];
+            boolean ok = false;
+        }
+
         HashMap<String, Case> mapCaseAdja = colonie.getCaseAdja();
         Case adja;
         switch (placementRoute) {

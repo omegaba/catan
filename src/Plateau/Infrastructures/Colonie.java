@@ -5,6 +5,8 @@ import Plateau.Plateau;
 import Plateau.Composants.Case;
 
 import java.util.HashMap;
+import java.util.Random;
+
 import Jeu.Communication;
 
 public class Colonie {
@@ -21,6 +23,8 @@ public class Colonie {
 		this.case_adja = null;
 		this.plateau = p;
 		this.nbrRessource = 1;
+		c = new Communication();
+		case_adja = new HashMap<>();
 	}
 
 	public void upgrade() {
@@ -143,12 +147,27 @@ public class Colonie {
 				location = c.choixLocationDeLaColonie();
 			}
 			if (placementOkPremierTours(caseChoisi, location)) {
-
+				placement(caseChoisi, location);
 				placementOk = true;
 			} else {
 				System.out
 						.println("Vous ne pouvez pas placer votre colonie ici, veuillez choisir un autre emplacement.");
 				essai++;
+			}
+		}
+	}
+
+	public void placerPremierTourIa() {
+		Random rd = new Random();
+		boolean ok = false;
+		String[] locationColonie = { "haut gauche", "haut droit", "bas droit", "bas gauche" };
+		while (!ok) {
+			int i = rd.nextInt(plateau.getPlateau().length - 2) + 1;
+			int j = rd.nextInt(plateau.getPlateau()[0].length - 2) + 1;
+			int nLocation = rd.nextInt(4);
+			if (placementOkPremierTours(plateau.getPlateau()[i][j], locationColonie[nLocation])) {
+				placement(plateau.getPlateau()[i][j], locationColonie[nLocation]);
+				ok = true;
 			}
 		}
 	}
@@ -183,21 +202,21 @@ public class Colonie {
 			}
 		}
 
-		if (locationHorizontale.equals("haut") && locationVerticale.equals("gauche")) {
+		if (locationHorizontale.equals("gauche") && locationVerticale.equals("haut")) {
 			map.put("bas droit", caseChoisi);
 		}
-		if (locationHorizontale.equals("bas") && locationVerticale.equals("gauche")) {
+		if (locationHorizontale.equals("gauche") && locationVerticale.equals("bas")) {
 			map.put("haut droit", caseChoisi);
 		}
-		if (locationHorizontale.equals("haut") && locationVerticale.equals("droit")) {
+		if (locationHorizontale.equals("droit") && locationVerticale.equals("haut")) {
 			map.put("bas gauche", caseChoisi);
 		}
-		if (locationHorizontale.equals("bas") && locationVerticale.equals("droit")) {
+		if (locationHorizontale.equals("droit") && locationVerticale.equals("bas")) {
 			map.put("haut gauche", caseChoisi);
 		}
 
-		setMapColonie();
 		this.case_adja = map;
+		setMapColonie();
 
 		if (caseChoisi.hasPort()) {
 			joueur.getPorts().add(caseChoisi.getPort());

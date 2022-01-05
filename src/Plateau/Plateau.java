@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Random;
-import java.util.Map.Entry;
 
 import Carte.Developpement.CarteDeveloppement;
 import Carte.Developpement.Chevalier;
@@ -13,8 +12,11 @@ import Carte.Developpement.PointDeVictoire;
 import Carte.Developpement.Progres.ProgresInvention;
 import Carte.Developpement.Progres.ProgresMonopole;
 import Carte.Developpement.Progres.ProgresRoute;
+import Carte.Speciale.CarteChevalierLePlusPuissant;
+import Carte.Speciale.CarteRouteLaPlusLongue;
 import Jeu.AffichageText;
 import Jeu.Communication;
+import Joueur.Ia;
 import Joueur.Joueur;
 import Plateau.Composants.Case;
 import Plateau.Infrastructures.Colonie;
@@ -27,10 +29,12 @@ public class Plateau {
 
     private Case[][] plateau;
     private LinkedList<Joueur> listJoueurs;
-    private int numeroJoueurActuel;
+    private int numeroJoueurActuel, nbChevalierMax, nbRouteMax;
     private boolean partiFini;
     private LinkedList<CarteDeveloppement> pileCarteDeveloppement;
     private Voleur voleur;
+    private CarteChevalierLePlusPuissant chevalierPuissant;
+    private CarteRouteLaPlusLongue routeLongue;
 
     public Plateau() {
         int nbPortNormal = 3;
@@ -43,18 +47,28 @@ public class Plateau {
         plateau = new Case[6][6];
         for (int i = 0; i < plateau.length; i++) {
             for (int j = 0; j < plateau[i].length; j++) {
-                if (i == 0 || j == 0 || i == 5 || j == 5) {
+                if ((i == 0 && (j == 2 || j == 4)) || (i == 5 && (j == 1 || j == 3)) || (j == 0 && (i == 1 || i == 3))
+                        || (j == 5 && (i == 2 || i == 4))) {
                     plateau[i][j] = new Case(0, "Maritime");
-                    if (nbPortNormal-- > 0 && nbPortPlacer++ % 2 == 0) {
+                    if (nbPortPlacer++ % 2 == 0 && nbPortNormal > 0) {
                         plateau[i][j].setPort(new Port(plateau[i][j]));
-                    } else
+                        nbPortNormal--;
+                    } else {
                         plateau[i][j].setPort(new PortSpecialise(plateau[i][j], listRessources.removeFirst()));
-                } else {
+
+                    }
+                } else if (i != 0 && j != 0 && i != 5 && j != 5) {
                     int r = new Random().nextInt(jeton.size());
                     if (i != 3 || j != 2)
                         plateau[i][j] = new Case(jeton.remove(r), environment.remove(r));
-                    else
-                        plateau[i][j] = new Case(0, "Désert");
+                    else {
+                        Case c = new Case(0, "Désert");
+                        c.setVoleur(true);
+                        plateau[i][j] = c;
+                        voleur = new Voleur(c, this);
+                    }
+                } else {
+                    plateau[i][j] = new Case(0, "Maritime");
                 }
             }
         }
@@ -78,7 +92,7 @@ public class Plateau {
                     plateau[i][j].getMap().put("bas droit", null);
                     plateau[i][j].getMap().put("bas", plateau[i + 1][j]);
                     plateau[i][j].getMap().put("bas gauche", plateau[i + 1][j - 1]);
-                    plateau[i][j].getMap().put("gauche", plateau[i - 1][j]);
+                    plateau[i][j].getMap().put("gauche", plateau[i][j - 1]);
                 } else if (i == 0) {
                     plateau[i][j].getMap().put("haut gauche", null);
                     plateau[i][j].getMap().put("haut", null);
@@ -175,37 +189,66 @@ public class Plateau {
         }
 
         Collections.shuffle(pileCarteDeveloppement);
+
+        chevalierPuissant = new CarteChevalierLePlusPuissant("Chevalier le plus puissant", null);
+        routeLongue = new CarteRouteLaPlusLongue("Route la plus longue", null);
+
+        nbChevalierMax = 0;
+        nbRouteMax = 0;
     }
 
     public void deuxPremiersTour(AffichageText a) {
         for (Joueur j : listJoueurs) {
+            System.out.println("Tour de:");
+            j.affiche();
             Colonie c = new Colonie(j, false, this);
-            c.placerPremierTour();
+            if (j instanceof Ia)
+                c.placerPremierTourIa();
+            else
+                c.placerPremierTour();
+            j.getColonie().add(c);
             Route r = new Route(j, this);
-            r.placerPremierTours(c);
+            r.placerPremierTours(c, j instanceof Ia);
             a.affiche();
+            j.calculPoints();
+        }
+        for (int i = 0; i < plateau.length; i++) {
+            for (int j = 0; j < plateau[i].length; j++) {
+                System.out.print(plateau[i][j] + "  |||| CASE SUIVANTE ||||");
+            }
+            System.out.println();
         }
         for (int i = listJoueurs.size() - 1; i >= 0; i--) {
+            System.out.println("Tour de:");
+            listJoueurs.get(i).affiche();
             Colonie c = new Colonie(listJoueurs.get(i), false, this);
-            c.placerPremierTour();
+            if (listJoueurs.get(i) instanceof Ia)
+                c.placerPremierTourIa();
+            else
+                c.placerPremierTour();
+            listJoueurs.get(i).getColonie().add(c);
             Route r = new Route(listJoueurs.get(i), this);
-            r.placerPremierTours(c);
+            r.placerPremierTours(c, listJoueurs.get(i) instanceof Ia);
+            listJoueurs.get(numeroJoueurActuel).calculPoints();
             a.affiche();
         }
     }
 
     public void tour() {
-        System.out.println("Tour de :");
+        System.out.println("Tour de:");
         listJoueurs.get(numeroJoueurActuel).affiche();
         listJoueurs.get(numeroJoueurActuel).actionEffectuer();
+        donnerChevalierPlusPuissant();
+        donnerRouteLongue();
         listJoueurs.get(numeroJoueurActuel).calculPoints();
-        if (listJoueurs.get(numeroJoueurActuel).getPoints() >= 10)
+        if (listJoueurs.get(numeroJoueurActuel).getPoints() >= 7)
             partiFini = true;
-        if (++numeroJoueurActuel == listJoueurs.size())
+        else if (++numeroJoueurActuel == listJoueurs.size())
             numeroJoueurActuel = 0;
     }
 
     public void repartirRessource(int resultatDe) {
+        System.out.println("Le résultat du dé est " + resultatDe);
         for (int i = 0; i < plateau.length; i++) {
             for (int j = 0; j < plateau[i].length; j++) {
                 if (plateau[i][j].getNumero() == resultatDe) {
@@ -215,6 +258,32 @@ public class Plateau {
                                 c.getValue().getNbrRessource());
                     }
                 }
+            }
+        }
+    }
+
+    public void donnerChevalierPlusPuissant() {
+        for (Joueur j : listJoueurs) {
+            if (j.getNbChevalier() >= 3 && j.getNbChevalier() > nbChevalierMax) {
+                if (chevalierPuissant.getJoueur() != null)
+                    chevalierPuissant.getJoueur().getCarteSpeciale().remove(chevalierPuissant);
+                nbChevalierMax = j.getNbChevalier();
+                chevalierPuissant.setJoueur(j);
+                j.getCarteSpeciale().add(chevalierPuissant);
+                System.out.println(j.getNom() + " obtient la carte: Chevalier le Plus Puissant");
+            }
+        }
+    }
+
+    public void donnerRouteLongue() {
+        for (Joueur j : listJoueurs) {
+            if (j.getNbRoutes() >= 6 && j.getNbRoutes() > nbRouteMax) {
+                if (routeLongue.getJoueur() != null)
+                    routeLongue.getJoueur().getCarteSpeciale().remove(routeLongue);
+                nbRouteMax = j.getNbRoutes();
+                routeLongue.setJoueur(j);
+                j.getCarteSpeciale().add(routeLongue);
+                System.out.println(j.getNom() + " obtient la carte: Route la Plus Longue");
             }
         }
     }
@@ -234,27 +303,25 @@ public class Plateau {
     public LinkedList<CarteDeveloppement> getPileCarteDeveloppement() {
         return pileCarteDeveloppement;
     }
-    
-    
-    public Voleur getVoleur(){
-    	return this.voleur();
-    }
-    
-    
-    public void afficheJoueur(){
-    	for (Joueur j: listJoueurs){
-    		for(Colonie c : j.getColonie()){
-    			for(var v: c.getCaseAdja().entrySet()){
-    				if((v.getValue().hasVoleur())){
-    					j.affiche();
-    				}
-    			}	
-    		}
-    	}
+
+    public Voleur getVoleur() {
+        return this.voleur;
     }
 
-    public LinkedList<Joueur> getlistJoueur() {
-        return  listJoueurs;
+    public void afficheJoueur() {
+        for (Joueur j : listJoueurs) {
+            for (Colonie c : j.getColonie()) {
+                for (var v : c.getCaseAdja().entrySet()) {
+                    if ((v.getValue().hasVoleur())) {
+                        j.affiche();
+                    }
+                }
+            }
+        }
+    }
+
+    public int getNumeroJoueur() {
+        return numeroJoueurActuel;
     }
 
 }

@@ -2,6 +2,7 @@ package Jeu;
 
 import java.util.Scanner;
 
+import Joueur.Ia;
 import Joueur.Joueur;
 import Plateau.Plateau;
 
@@ -32,7 +33,7 @@ public class Communication {
     }
 
     public Joueur demanderJoueurs(int numeroJoueur, Plateau p) {
-        System.out.println("Le joueur n° " + numeroJoueur + " est-il joueur par un humain ou par l'ia ?");
+        System.out.println("Le joueur n° " + (numeroJoueur + 1) + " est-il joueur par un humain ou par l'ia ?");
         String rep;
         do {
             rep = sc.nextLine().toLowerCase().replaceAll("\\s+", "").strip();
@@ -46,12 +47,16 @@ public class Communication {
             } while (rep.isEmpty());
             nom = rep;
         } else
-            nom = "ia" + numeroJoueur;
-        System.out.println("Quelle couleurs aura le joueurs ?");
-        do {
-            rep = sc.nextLine().strip();
-        } while (rep.isEmpty());
-        return new Joueur(nom, ia, rep, p);
+            nom = "ia" + (numeroJoueur + 1);
+        String[] couleurs = { "bleu", "vert", "jaune", "rouge" };
+        // System.out.println("Quelle couleurs aura le joueurs ?");
+        // do {
+        // rep = sc.nextLine().toLowerCase().strip();
+        // } while (!rep.equals("bleu") && !rep.equals("vert") && !rep.equals("jaune")
+        // && !rep.equals("rouge"));
+        if (ia)
+            return new Ia(nom, couleurs[numeroJoueur], p);
+        return new Joueur(nom, couleurs[numeroJoueur], p);
     }
 
     public String choixAction(String action) {
@@ -99,8 +104,14 @@ public class Communication {
         int j;
         do {
             rep = sc.nextLine().toLowerCase().replaceAll("\\s+", " ").strip();
-            i = Integer.parseInt(rep.substring(0, 1));
-            j = Integer.parseInt(rep.substring(1, 2));
+            if (rep.length() != 3) {
+                i = -1;
+                j = -1;
+            } else {
+                i = Integer.parseInt(rep.substring(0, 1));
+                j = Integer.parseInt(rep.substring(2, 3));
+            }
+            System.out.println(rep);
         } while (i <= 0 || i >= 5 || j <= 0 || j >= 5);
         return rep;
     }
@@ -151,7 +162,7 @@ public class Communication {
         do {
             rep = sc.nextLine().toLowerCase().replaceAll("\\s+", " ").strip();
             i = Integer.parseInt(rep.substring(0, 1));
-            j = Integer.parseInt(rep.substring(1, 2));
+            j = Integer.parseInt(rep.substring(2, 3));
         } while (i <= 0 || i >= 5 || j <= 0 || j >= 5);
         return rep;
     }
