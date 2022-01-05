@@ -257,4 +257,12 @@ public class Plateau {
         return  listJoueurs;
     }
 
+    public int getNombreJoueur(){
+        int i=0;
+        for(Joueur j : listJoueurs){
+            i+=1;
+        }
+        return i;
+    }
+
 }
