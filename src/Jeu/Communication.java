@@ -18,7 +18,7 @@ public class Communication {
         System.out.println("Voulez-vous jouer en mode textuel ou en mode graphique ?");
         String rep;
         do {
-            rep = sc.nextLine().toLowerCase().replaceAll("\s+", "").strip();
+            rep = sc.nextLine().toLowerCase().replaceAll("\\s+", "").strip();
         } while (!rep.equals("textuel") && !rep.equals("graphique"));
         return rep;
     }
@@ -73,7 +73,7 @@ public class Communication {
                 "Voulez-vous construire une Route, une Colonie ou une Ville ?");
         String rep;
         do {
-            rep = sc.nextLine().toLowerCase().replaceAll("\s+", "").strip();
+            rep = sc.nextLine().toLowerCase().replaceAll("\\s+", "").strip();
         } while (!rep.equals("route") && !rep.equals("colonie") && !rep.equals("ville"));
         return rep;
     }
