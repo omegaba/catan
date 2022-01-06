@@ -1,3 +1,10 @@
 # catan
-Dans le dossier src exécuté 'javac Launcher.java'
-Puis exécuté 'java Launcher'
+Dans le dossier src exécuter:
+```bash
+javac Launcher.java
+```
+
+Puis:
+```bash
+java Launcher
+```
