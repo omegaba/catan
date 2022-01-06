@@ -1,9 +1,7 @@
 package Plateau.Composants;
 
-import Plateau.Composants.Case;
 import Plateau.Plateau;
-
-import java.util.LinkedList;
+import java.util.Random;
 import java.util.Scanner;
 
 public class Voleur {
@@ -25,8 +23,8 @@ public class Voleur {
 	}
 
 	public void placer() {
+		emplacement.setVoleur(false);
 		Scanner sc = new Scanner(System.in);
-		String s = sc.nextLine();
 		System.out.println("Donnez les coordonnées de la case  où vous voulez placer le voleur");
 		String CaseLocation = sc.nextLine();
 		String[] tab = decoupe(CaseLocation);
@@ -34,7 +32,26 @@ public class Voleur {
 		int j = Integer.parseInt(tab[1]);
 		Case c = p.getPlateau()[i][j];
 		this.emplacement = c;
-		c.setVoleur();
+		c.setVoleur(true);
+	}
+
+	public void placerIa(Random rd) {
+		emplacement.setVoleur(false);
+		Case c = p.getPlateau()[rd.nextInt(p.getPlateau().length - 2) + 1][rd.nextInt(p.getPlateau()[0].length - 2)
+				+ 1];
+		emplacement = c;
+		c.setVoleur(true);
+	}
+
+	public void DeplaceVoleur(Case c){
+		getEmplacement().setVoleur(false);
+		placer(c);
+	}
+
+	public boolean placer(Case c){
+		c.setVoleur(true);
+		this.emplacement= c;
+		return true;
 	}
 
 }

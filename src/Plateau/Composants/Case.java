@@ -5,7 +5,6 @@ import java.util.HashMap;
 import Plateau.Infrastructures.Colonie;
 import Plateau.Infrastructures.Port;
 import Plateau.Infrastructures.Route;
-import Plateau.Infrastructures.Colonie;
 
 public class Case {
     private final int numero;
@@ -39,8 +38,9 @@ public class Case {
                 production = "";
         }
         port = null;
-        MapColonie = null;
-        voleur=false;
+        MapColonie = new HashMap<>();
+        case_Adja = new HashMap<>();
+        voleur = false;
     }
 
     public void setPort(Port port) {
@@ -78,8 +78,17 @@ public class Case {
         }
     }
 
+    String listColo() {
+        StringBuilder sb = new StringBuilder();
+        for (var i : MapColonie.entrySet()) {
+            sb.append("key=" + i.getKey() + " value=" + i.getValue());
+        }
+        return sb.toString();
+    }
+
     public String toString() {
-        return "  " + numero + "  " + environement.substring(0, 2);
+        return "  " + numero + "  " + environement.substring(0, 2) + " haut=" + haut + " droit=" + droit + " bas=" + bas
+                + " gauche=" + gauche + " colonie:"+listColo();
     }
 
     public HashMap<String, Case> getMap() {
@@ -116,15 +125,13 @@ public class Case {
     public Port getPort() {
         return port;
     }
-    
-    public boolean hasVoleur(){
-    	return voleur==true;
+
+    public boolean hasVoleur() {
+        return voleur == true;
     }
-    
-    public boolean setVoleur(){
-    	this.voleur=true;
+
+    public void setVoleur(boolean present) {
+        this.voleur = present;
     }
-    public HashMap<String, Colonie> getColonie(){
-        return this.MapColonie;
-    }
+
 }

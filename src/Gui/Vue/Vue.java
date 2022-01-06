@@ -1,18 +1,24 @@
 package Gui.Vue;
 
 import java.awt.event.ActionListener;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 import java.awt.event.ActionEvent;
 import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-
+import javax.swing.plaf.metal.MetalButtonUI;
 import Gui.Controleur.Controleur;
 import Gui.Model.*;
 import Joueur.Joueur;
+import Plateau.Plateau;
+import Plateau.Composants.Case;
+import Plateau.Infrastructures.Port;
+
 import javax.swing.*;
 import java.awt.*;
-
 import javax.swing.JLabel;
 import javax.swing.JFrame;
 import java.awt.Font;
@@ -82,28 +88,30 @@ public class Vue extends JPanel {
 
     }
 
-    
-      public void initCenter(){
-      JPanel center= new JPanel();
-      center.setLayout(new GridBagLayout());
-      GridBagConstraints carre= new GridBagConstraints();
-      carre.gridx=1;
-      carre.gridy=0;
-      if(model.getListJoueurs().size()>2){
-        center.add(new InfrastructurePanel(model.getListJoueurs().get(2),true));
-      }
-      carre.gridx=0;
-      carre.gridy+=1;
-
-      if(model.getListJoueurs().size()>3){
-          center.add(new InfrastructurePanel(model.getListJoueurs().get(3),false));
-      }
-      carre.gridx+=1;
-      carre.gridy=1;
-
-      center.add(new )
-    }
-     
+    /*
+     * public void initCenter(){
+     * JPanel center= new JPanel();
+     * center.setLayout(new GridLayout());
+     * GridLayout carre= new GridLayout();
+     * carre.gridx=1;
+     * carre.gridy=0;
+     * if(model.getListJoueurs().size()>2){
+     * center.add(new InfrastructurePanel(model.getListJoueurs().get(2),true),
+     * carre);
+     * }
+     * carre.gridx=0;
+     * carre.gridy+=1;
+     * 
+     * if(model.getListJoueurs().size()>3){
+     * center.add(new
+     * InfrastructurePanel(model.getListJoueurs().get(3),false),carre);
+     * }
+     * carre.gridx+=1;
+     * carre.gridy=1;
+     * 
+     * center.add(new )
+     * }
+     */
 
     public class ChoiceHandler implements ActionListener {
 
@@ -336,22 +344,22 @@ public class Vue extends JPanel {
             public void action(int numero) {
                 switch (numero) {
                     case 0:
-                        addActionListener(e -> controleur.lancerDe());
+                        addActionListener(e -> controleur.LancerDe());
                         break;
-                    case 1:
+                    /*case 1:
                         addActionListener(e -> controleur.commerce());
-                        break;
+                        break;*/
                     case 2:
-                        addActionListener(e -> controleur.menuConstruction());
+                        addActionListener(e -> controleur.MenuConstruction());
                         break;
                     case 3:
                         addActionListener(e -> controleur.AcheterCarteDev());
                         break;
                     case 4:
-                        addActionListener(e -> controleur.utiliserCarteDev());
+                        addActionListener(e -> controleur.AcheterCarteDev());
                         break;
                     case 5:
-                        addActionListener(e -> controleur.DeplaceVoleur());
+                        addActionListener(e -> controleur.DeplaceVoleur(null));
                         break;
                     case 6:
                         addActionListener(e -> controleur.valider());
@@ -378,13 +386,13 @@ public class Vue extends JPanel {
         private final JLabel villes;
         private final JLabel routes;
 
-        public InfrastructurePanel(Joueur joueur, boolean location){
-            this.joueur= joueur;
-            colonies= new JLabel();
-            villes=new JLabel();
-            routes= new JLabel();
+        public InfrastructurePanel(Joueur joueur, boolean location) {
+            this.joueur = joueur;
+            colonies = new JLabel();
+            villes = new JLabel();
+            routes = new JLabel();
 
-            if(location){
+            if (location) {
                 setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
             }
 
@@ -398,9 +406,8 @@ public class Vue extends JPanel {
             description();
         }
 
-
-        public void description(){
-            colonies.setText(joueur.getNbColonie() + " colonies");
+        public void description() {
+            colonies.setText(joueur.getNbColonies() + " colonies");
             villes.setText(joueur.getNbVilles() + " villes");
             routes.setText(joueur.getNbRoutes() + " routes");
         }
@@ -414,37 +421,283 @@ public class Vue extends JPanel {
     public class FenetreDialog extends JDialog {
         private final Component fenetre;
 
-        public FenetreDialog(Frame source, Component fenetre, boolean modal){
+        public FenetreDialog(Frame source, Component fenetre) {
             super(source);
             add(fenetre);
-            this.fenetre= fenetre;
+            this.fenetre = fenetre;
             setLocationRelativeTo(source);
             setMinimumSize(fenetre.getPreferredSize());
             pack();
         }
 
-
-        public boolean isEmpty(){
-            return fenetre==null || !fenetre.isVisible();
+        public boolean isEmpty() {
+            return fenetre == null || !fenetre.isVisible();
         }
-        
 
-        public void paint(Graphics g){
-            if (isEmpty()){
+        public void paint(Graphics g) {
+            if (isEmpty()) {
                 setVisible(false);
             }
             super.paint(g);
         }
 
-        public void repaint(boolean flag){
+        public void repaint(boolean flag) {
             setVisible(flag);
             super.repaint();
         }
     }
 
-    public class PanelPlateau{
-        
+    public class PanelPlateau {
+        private final Controleur controleur;
+
+        public PanelPlateau(Controleur controleur, Plateau p) {
+            GridLayout layout = new GridLayout(6, 6);
+            setLayout(layout);
+            this.controleur = controleur;
+            initBoard(p.getTabCase(), layout);
+
+        }
+
+        public void initBoard(Case[][] cases, GridLayout layout) {
+            LinkedList<Integer> jeton = new LinkedList<>(
+                    Arrays.asList(2, 3, 4, 5, 5, 6, 6, 8, 8, 9, 9, 10, 10, 11, 12));
+            LinkedList<String> environment = new LinkedList<>(Arrays.asList("Forêt", "Pré", "Champs", "Colline",
+                    "Montagne",
+                    "Forêt", "Pré", "Champs", "Colline", "Montagne", "Forêt", "Pré", "Champs", "Colline", "Montagne"));
+            LinkedList<String> listRessources = new LinkedList<>(
+                    Arrays.asList("Argile", "Ble", "Bois", "Laine", "Minerai"));
+            int nbPortNormal = 3;
+            int nbPortPlacer = 0;
+            for (int i = 0; i < cases.length; i++) {
+                for (int j = 0; j < cases[i].length; i++) {
+                    if ((i == 0 && (j == 2 || j == 4)) || (i == 5 && (j == 1 || j == 3))
+                            || (j == 0 && (i == 1 || i == 3))
+                            || (j == 5 && (i == 2 || i == 4))) {
+                        add(new PanelCase(cases[i][j], controleur), layout);
+                        if (nbPortPlacer++ % 2 == 0 && nbPortNormal > 0) {
+                            add(new PanelPort(cases[i][j], controleur), layout);
+                            nbPortNormal--;
+                        } else {
+                            add(new PanelPortSpe(cases[i][j], controleur), layout);
+                        }
+                    } else if (i != 0 && j != 0 && i != 5 && j != 5) {
+                        int r = new Random().nextInt(jeton.size());
+                        if (i != 3 || j != 2) {
+                            Case ca = new Case(jeton.remove(r), environment.remove(r));
+                            add(new PanelCase(ca, controleur), layout);
+                        } else {
+                            Case ca = new Case(0, "Désert");
+                            ca.setVoleur(true);
+                            add(new PanelCase(ca, controleur), layout);
+                            add(new PanelVoleur());
+                        }
+                    } else {
+                        Case ca = new Case(0, "Maritime");
+                        add(new PanelCase(ca, controleur), layout);
+                    }
+                }
+            }
+        }
     }
 
-    
+    public class PanelCase extends JButton {
+        private static boolean active = false;
+        private final Case Case;
+        private final Controleur controleur;
+        private final PanelVoleur voleur;
+        private final GridLayout layout;
+        private Shape shape;
+
+        public PanelCase(Case c, Controleur controleur) {
+            this.Case = c;
+            this.setLayout(new GridLayout());
+            layout= new GridLayout();
+            this.controleur = controleur;
+            description(layout);
+            addActionListener(e -> controleur.tileAction(getCase()));
+            this.setBackground(Color.LIGHT_GRAY);
+            voleur = new PanelVoleur();
+            add(voleur, layout);
+            setUI(new MetalButtonUI() {
+                @Override
+                protected Color getDisabledTextColor() {
+                    return Color.BLACK;
+                }
+            });
+        }
+
+        public static void ActivCase(boolean flag) {
+            active = flag;
+        }
+
+        public void description(GridLayout layout) {
+            String environement = Case.getEnvironement();
+            if (!environement.equals("Désert")) {
+                environement += " " + Case.getNumero();
+            }
+            add(new JLabel(environement), layout);
+        }
+
+        public void paintComponent(Graphics g) {
+            Dimension size = getSize();
+            g.fillRect(0, 0, size.width, size.height);
+            if (!Case.hasVoleur()) {
+                voleur.setVisible(false);
+                setEnabled(active);
+            } else {
+                voleur.setVisible(true);
+                setEnabled(false);
+            }
+            super.paintComponent(g);
+        }
+
+        public Case getCase() {
+            return Case;
+        }
+
+    }
+
+    public class PanelVoleur extends JPanel {
+        public PanelVoleur() {
+            setBackground(Color.black);
+        }
+    }
+
+    public class PanelPort extends JButton {
+
+        private static boolean active = false;
+        protected final Case Case;
+        private final Controleur controleur;
+        private final PanelVoleur voleur;
+        private final GridLayout layout;
+        private Shape shape;
+
+        public PanelPort(Case c, Controleur controleur) {
+            this.Case = c;
+            layout= new GridLayout();
+            this.setLayout(new GridLayout());
+            this.controleur = controleur;
+            description(layout);
+            addActionListener(e -> controleur.tileAction(getCase()));
+            this.setBackground(Color.LIGHT_GRAY);
+            //setPreferredSize(TILE_SIZE);
+            voleur = new PanelVoleur();
+            add(voleur, layout);
+            setUI(new MetalButtonUI() {
+                @Override
+                protected Color getDisabledTextColor() {
+                    return Color.BLACK;
+                }
+            });
+        }
+
+        public static void ActivCase(boolean flag) {
+            active = flag;
+        }
+
+        public void description(GridLayout layout) {
+            String environement = "Maritime" + " " + Case.getNumero();
+            add(new JLabel(environement), layout);
+        }
+
+        public void paintComponent(Graphics g) {
+            Dimension size = getSize();
+            g.fillRect(0, 0, size.width, size.height);
+            if (!Case.hasVoleur()) {
+                voleur.setVisible(false);
+                setEnabled(active);
+            } else {
+                voleur.setVisible(true);
+                setEnabled(false);
+            }
+            super.paintComponent(g);
+        }
+
+        public Case getCase() {
+            return Case;
+        }
+    }
+
+    public class PanelPortSpe extends PanelPort{
+        public PanelPortSpe(Case c, Controleur controleur){
+            super(c, controleur);
+        }
+
+        public void description(GridLayout layout){
+            
+        }
+    }
+
+    public class PanelConstruction extends JPanel {
+        private final Controleur controleur;
+        private final Joueur joueur;
+        private final CPanel route;
+        private final CPanel ville;
+        private final CPanel colonie;
+
+        public PanelConstruction(Joueur joueur, Controleur controleur) {
+            this.joueur = joueur;
+            this.controleur = controleur;
+            setLayout(new GridLayout());
+            route = new CPanel('r');
+            colonie = new CPanel('c');
+            ville = new CPanel('v');
+            gererConstruction();
+        }
+
+        public void gererConstruction() {
+            if (joueur.aRessource("colonie") && joueur.getNbColonies() > 0) {
+                add(colonie);
+            } else {
+                remove(colonie);
+            }
+            if (joueur.aRessource("route") && joueur.getNbRoutes() > 0) {
+                add(route);
+            } else {
+                remove(route);
+            }
+            if (joueur.aRessource("ville") && joueur.getNbVilles() > 0) {
+                add(ville);
+            } else {
+                remove(ville);
+            }
+        }
+
+        public void paintComponent(Graphics g) {
+            gererConstruction();
+            super.paintComponent(g);
+        }
+
+        public class ConstructionButton extends JButton {
+            public ConstructionButton(char c) {
+                super("Construire");
+                addActionListener(e -> controleur.ChoixConstruction(c));
+            }
+        }
+
+        public class CPanel extends JPanel {
+            public CPanel(char c) {
+                setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
+                switch (c) {
+                    case 'r':
+                        JLabel r = new JLabel("r");
+                        add(r);
+                        r.setText("route");
+                        add(new ConstructionButton(c));
+                    case 'c':
+                        JLabel colo = new JLabel("c");
+                        add(colo);
+                        colo.setText("colonie");
+                        add(new ConstructionButton(c));
+                    case 'v':
+                        JLabel ville = new JLabel("v");
+                        add(ville);
+                        ville.setText("colonie");
+                        add(new ConstructionButton(c));
+                }
+
+            }
+        }
+    }
+
 }

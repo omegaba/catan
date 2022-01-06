@@ -11,47 +11,72 @@ import Carte.Ressources.CarteRessources;
 import Carte.Speciale.CarteSpeciale;
 import Jeu.Communication;
 import Plateau.Plateau;
+import Plateau.Composants.Case;
+import Plateau.Composants.Voleur;
 import Plateau.Infrastructures.Colonie;
 import Plateau.Infrastructures.Port;
 import Plateau.Infrastructures.PortSpecialise;
 import Plateau.Infrastructures.Route;
+
+import java.nio.charset.Charset;
 import java.util.*;
 
 public class Joueur {
-	private boolean carteDev; // dit si le joueur à utilier une carte developpement ou non durant son tour;
-	private final String nom;
-	private final boolean ai;
-	private int points;
-	private Communication c;
-	public String couleur;
-	private LinkedList<Colonie> colonie;
-	private LinkedList<CarteRessources> deckCarteRessources;
-	private LinkedList<CarteDeveloppement> deckCarteDeveloppement;
-	private LinkedList<CarteSpeciale> deckCarteSpeciale;
-	private LinkedList<Port> port;
-	private Plateau plateau;
-	private int nbColonies, nbVilles, nbRoutes;
-	private int nbChevalierJouer;
+	protected boolean carteDev; // dit si le joueur à utilier une carte developpement ou non durant son tour;
+	protected final String nom;
+	protected int points;
+	protected Communication c;
+	public final String couleur;
+	public final int chiffreCouleur;
+	protected LinkedList<Colonie> colonie;
+	protected LinkedList<CarteRessources> deckCarteRessources;
+	protected LinkedList<CarteDeveloppement> deckCarteDeveloppement;
+	protected LinkedList<CarteSpeciale> deckCarteSpeciale;
+	protected LinkedList<Port> port;
+	protected Plateau plateau;
+	protected int nbColonies;
+	protected int nbVilles;
+	protected int nbRoutes;
+	protected int nbChevalierJouer;
 
-	public Joueur(String nom, boolean ai, String couleur, Plateau p) {
+	public Joueur(String nom, String couleur, Plateau p) {
 		this.nom = nom;
-		this.ai = ai;
 		this.couleur = couleur;
 		points = 0;
+		c = new Communication();
 		deckCarteRessources = new LinkedList<>();
 		deckCarteDeveloppement = new LinkedList<>();
 		deckCarteSpeciale = new LinkedList<>();
+		colonie = new LinkedList<>();
+		port = new LinkedList<>();
 		this.plateau = p;
-		nbColonies = 5;
+		nbColonies = 3;
 		nbVilles = 4;
-		nbRoutes = 15;
+		nbRoutes = 13;
 		nbChevalierJouer = 0;
+		carteDev = true;
+		;
+		switch (couleur) {
+			case "bleu":
+				chiffreCouleur = 0;
+				break;
+			case "vert":
+				chiffreCouleur = 1;
+				break;
+			case "jaune":
+				chiffreCouleur = 2;
+				break;
+			case "rouge":
+				chiffreCouleur = 3;
+				break;
+			default:
+				chiffreCouleur = -1;
+		}
 	}
 
 	public void affiche() {
 		System.out.println("Nom :" + this.nom + ", couleur " + this.couleur);
 		System.out.println("Nombre de point : " + this.points);
-		System.out.print("Cartes développement: ");
 	}
 
 	public int LancerDe() {
@@ -71,7 +96,7 @@ public class Joueur {
 	public int nbRessource(String ressource) {
 		int r = 0;
 		for (CarteRessources c : deckCarteRessources) {
-			if (c.getNom().equals(ressource))
+			if (c.getNom().equalsIgnoreCase(ressource))
 				r += 1;
 		}
 		return r;
@@ -110,6 +135,7 @@ public class Joueur {
 	private void utiliserCarteDevelopment() {
 		boolean hasChevalier = false;
 		boolean hasProgres = false;
+		carteDev = false;
 		for (CarteDeveloppement cd : deckCarteDeveloppement) {
 			if (cd instanceof Chevalier)
 				hasChevalier = true;
@@ -176,7 +202,39 @@ public class Joueur {
 		}
 	}
 
-	private void achatCarteDeveloppement() {
+	public void utiliseCartChevalier(){
+		for (CarteDeveloppement cd : deckCarteDeveloppement) {
+			if (cd instanceof Chevalier) {
+				//((Chevalier) cd).jouerChevalier();
+				deckCarteDeveloppement.remove(cd);
+				break;
+			}
+		}
+	}
+
+	public void UtiliserCarteMonopole(){
+		for (CarteDeveloppement cp : deckCarteDeveloppement) {
+			if (cp instanceof ProgresMonopole) {
+				//((ProgresMonopole) cp).monopole();
+				deckCarteDeveloppement.remove(cp);
+				break;
+			}
+		}
+	}
+
+	public void utiliserCartProgres(){
+		for (CarteDeveloppement cp : deckCarteDeveloppement) {
+			if (cp instanceof ProgresInvention) {
+				//((ProgresInvention) cp).pioche();
+				deckCarteDeveloppement.remove(cp);
+				break;
+			}
+		}
+	}
+
+
+	
+	protected void achatCarteDeveloppement() {
 		if (!plateau.getPileCarteDeveloppement().isEmpty()) {
 			CarteDeveloppement cd = plateau.getPileCarteDeveloppement().removeFirst();
 			System.out.println("Vous avez obtenu: " + cd);
@@ -197,6 +255,7 @@ public class Joueur {
 	}
 
 	public void actionEffectuer() {
+		carteDev = true;
 		jouerCarteDeveloppement();
 
 		int resultatDe = LancerDe();
@@ -296,6 +355,9 @@ public class Joueur {
 				if (nbArgile < 1 && nbBois < 1)
 					return false;
 				break;
+			case "carte ressource":
+				if(nbMinerai <1 && nbBle < 1 && nbLaine <1)
+				return false;
 		}
 		return true;
 	}
@@ -374,7 +436,7 @@ public class Joueur {
 				perdreRessource("Ble", 2);
 				colonie.get(colonieUprage).upgrade();
 				nbVilles--;
-				nbRoutes++;
+				nbColonies++;
 			}
 		} else
 			System.out.println("Vous avez déjà le nombre maximum de villes.");
@@ -405,31 +467,46 @@ public class Joueur {
 	}
 
 	public void perdreRessource(String ressource, int n) {
+		LinkedList<CarteRessources> list = new LinkedList<>();
 		for (int i = 0; i < n; i++) {
-			for (CarteRessources c : deckCarteRessources) {
-				if (c.getNom().equalsIgnoreCase(ressource)) {
-					deckCarteRessources.remove(c);
+			for (CarteRessources cr : deckCarteRessources) {
+				if (cr.getNom().equalsIgnoreCase(ressource)) {
+					list.add(cr);
 				}
 			}
 		}
+		for (CarteRessources i : list) {
+			deckCarteRessources.remove(i);
+		}
 	}
+
+	public void PerdreRessource(Case c){
+		for (CarteRessources i : deckCarteRessources){
+			if (i.getNom().equals(c.getRessource())){
+				perdreRessource(i.getNom(), 1);
+			}
+		}
+	}
+	public void DeplaceVoleur(Case c, Voleur voleur){
+		voleur.DeplaceVoleur(c);
+	}
+
 
 	public boolean hasPort() {
 		return !(port.isEmpty());
 	}
 
-	private boolean hasSpecialPort() {
+	public boolean hasSpecialPort() {
 		for (Port p : port)
 			if (p instanceof PortSpecialise)
 				return true;
 		return false;
 	}
 
-	int nbArgile = nbRessource("Argile");
-	int nbBois = nbRessource("Bois");
-	int nbLaine = nbRessource("Laine");
-
 	public void commerce(String taux) {
+		int nbArgile = nbRessource("Argile");
+		int nbBois = nbRessource("Bois");
+		int nbLaine = nbRessource("Laine");
 		int nbBle = nbRessource("Ble");
 		int nbMinerai = nbRessource("Minerai");
 		int t = Integer.parseInt(taux.split(":")[0]);
@@ -526,8 +603,8 @@ public class Joueur {
 
 	public void calculPoints() {
 		points = 0;
-		for (Colonie c : colonie) {
-			if (c.getIsVille())
+		for (Colonie col : colonie) {
+			if (col.getIsVille())
 				points += 2;
 			else
 				points += 1;
@@ -549,6 +626,10 @@ public class Joueur {
 		return deckCarteRessources;
 	}
 
+	public LinkedList<CarteDeveloppement> getDeckCarteDeveloppement() {
+		return deckCarteDeveloppement;
+	}
+
 	public String getNom() {
 		return nom;
 	}
@@ -562,8 +643,8 @@ public class Joueur {
 	}
 
 	public void JouerChevalier() {
+		nbChevalierJouer++;
 		Scanner sc = new Scanner(System.in);
-		String s = sc.nextLine();
 		System.out.println("Vous avez la possibilité de déplacer le voleur");
 		plateau.getVoleur().placer();
 		System.out.println(
@@ -572,8 +653,8 @@ public class Joueur {
 		plateau.afficheJoueur();
 		System.out.println("Veuillez saisir le nom d'un joueur ");
 		String Jnom = sc.nextLine();
-		Joueur player = new Joueur(null, false, "", null);
-		for (Joueur j : plateau.getlistJoueur()) {
+		Joueur player = new Joueur(null, "", null);
+		for (Joueur j : plateau.getListJoueurs()) {
 			if (j.getNom().equals(Jnom)) {
 				player = j;
 			}
@@ -630,15 +711,46 @@ public class Joueur {
 		return this.colonie;
 	}
 
-	public int getNbColonie() {
-		return this.nbColonies;
-	}
-
-	public int getNbVilles() {
-		return this.nbVilles;
+	public int getNbChevalier() {
+		return nbChevalierJouer;
 	}
 
 	public int getNbRoutes() {
-		return this.nbRoutes;
+		return 15 - nbRoutes;
 	}
+
+	public LinkedList<CarteSpeciale> getCarteSpeciale() {
+		return deckCarteSpeciale;
+	}
+
+	public String getCouleur() {
+		return couleur;
+	}
+
+	public int getChiffreCouleur() {
+		return chiffreCouleur;
+	}
+
+	public int getNbColonies() {
+		return this.nbColonies;
+	}
+
+	public int getNbVilles(){
+		return this.nbVilles;
+	}
+
+	public boolean achatCarteDeveloppementGui(){
+		if (!plateau.getPileCarteDeveloppement().isEmpty()) {
+			CarteDeveloppement cd = plateau.getPileCarteDeveloppement().removeFirst();
+			cd.setJoueur(this);
+			deckCarteDeveloppement.add(cd);
+			perdreRessource("minerai", 1);
+			perdreRessource("laine", 1);
+			perdreRessource("blé", 1);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
 }

@@ -1,6 +1,7 @@
-package Jeu;
-
-import Plateau.Plateau;
+import Carte.*;
+import Jeu.*;
+import Plateau.*;
+import Joueur.*;
 
 public class Launcher {
     public static void main(String[] args) {
@@ -22,6 +23,11 @@ public class Launcher {
             a.affiche();
             p.tour();
         }
+        System.out.println(
+                "Bravo à " + p.getListJoueurs().get(p.getNumeroJoueur()).getNom() + " !! Qui à gagner la partie avec "
+                        + p
+                                .getListJoueurs().get(p.getNumeroJoueur()).getPoints()
+                        + " points.");
     }
 
     static void jeuGraph() {

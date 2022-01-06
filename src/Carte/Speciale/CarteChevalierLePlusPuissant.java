@@ -9,4 +9,12 @@ public class CarteChevalierLePlusPuissant extends CarteSpeciale {
         // TODO Auto-generated constructor stub
     }
 
+    public void setJoueur(Joueur j) {
+        super.joueur = j;
+    }
+
+    public Joueur getJoueur() {
+        return super.joueur;
+    }
+
 }

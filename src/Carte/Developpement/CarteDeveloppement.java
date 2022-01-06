@@ -12,7 +12,7 @@ public class CarteDeveloppement extends Carte {
     }
 
     public String toString() {
-        return ("Carte developpement :" + this.nom);
+        return ("Carte developpement:" + this.nom);
     }
 
     public void setJoueur(Joueur j) {
