@@ -24,55 +24,30 @@ import javax.swing.JFrame;
 import java.awt.Font;
 import Gui.Model.*;
 
+
+
+
+
+
+// TOUT CA N'A SERVI à RIEN.........
+
+
+
+
+
+
+
 public class Vue extends JPanel {
     private final Model model;
-    private final JFrame window;
-    private JPanel titleNamePanel, starbuttonPanel;
-    private JLabel titleNameLabel, starbuttonLabel;
-    private JButton startButton;
-    private Font titlefont = new Font("Times New Roman", Font.PLAIN, 90);
-    private Font normalFont = new Font("Times New Roman", Font.PLAIN, 26);
+    private final Controleur controleur;
 
-    public Vue(Model model) {
+    public Vue(JFrame fenetre, Model model) {
         this.model = model;
-        // Window.setDefaultCloseOperation(
-        window = new JFrame();
-        window.setSize(800, 600);
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.getContentPane().setBackground(Color.BLACK);
-        window.setLayout(null);
-
-        // titlescreen
-
-        titleNamePanel = new JPanel();
-        titleNamePanel.setBounds(100, 100, 600, 500);
-        titleNamePanel.setBackground(Color.black);
-        titleNameLabel = new JLabel("Colon de Catan");
-        titleNameLabel.setForeground(Color.white);
-        titleNameLabel.setFont(titlefont);
-        titleNamePanel.add(titleNameLabel);
-
-        starbuttonPanel = new JPanel();
-        starbuttonPanel.setBounds(300, 400, 200, 100);
-        starbuttonPanel.setBackground(Color.white);
-        startButton = new JButton("Commencer");
-        startButton.setBackground(Color.black);
-        startButton.setForeground(Color.white);
-        startButton.setFont(normalFont);
-
-        /*
-         * startButton.addActionListener();
-         * startButton.setActionCommand("start");
-         */
-
-        window.add(titleNamePanel);
-        starbuttonPanel.add(startButton);
-        window.add(starbuttonPanel);
-        // initCenter();
+        controleur = new Controleur(model, this, fenetre);
+        model.setControleur(controleur);
+        setLayout(new BorderLayout());
         initBottom();
         initLeft();
-
-        window.setVisible(true);
     }
 
     public void initBottom() {
@@ -86,41 +61,6 @@ public class Vue extends JPanel {
         panel.add(de);
         add(panel, BorderLayout.LINE_START);
 
-    }
-
-    /*
-     * public void initCenter(){
-     * JPanel center= new JPanel();
-     * center.setLayout(new GridLayout());
-     * GridLayout carre= new GridLayout();
-     * carre.gridx=1;
-     * carre.gridy=0;
-     * if(model.getListJoueurs().size()>2){
-     * center.add(new InfrastructurePanel(model.getListJoueurs().get(2),true),
-     * carre);
-     * }
-     * carre.gridx=0;
-     * carre.gridy+=1;
-     * 
-     * if(model.getListJoueurs().size()>3){
-     * center.add(new
-     * InfrastructurePanel(model.getListJoueurs().get(3),false),carre);
-     * }
-     * carre.gridx+=1;
-     * carre.gridy=1;
-     * 
-     * center.add(new )
-     * }
-     */
-
-    public class ChoiceHandler implements ActionListener {
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            // TODO Auto-generated method stub
-            String start = e.getActionCommand();
-
-        }
     }
 
     public class PanelListJoueur extends JPanel {
@@ -346,9 +286,11 @@ public class Vue extends JPanel {
                     case 0:
                         addActionListener(e -> controleur.LancerDe());
                         break;
-                    /*case 1:
-                        addActionListener(e -> controleur.commerce());
-                        break;*/
+                    /*
+                     * case 1:
+                     * addActionListener(e -> controleur.commerce());
+                     * break;
+                     */
                     case 2:
                         addActionListener(e -> controleur.MenuConstruction());
                         break;
@@ -511,7 +453,7 @@ public class Vue extends JPanel {
         public PanelCase(Case c, Controleur controleur) {
             this.Case = c;
             this.setLayout(new GridLayout());
-            layout= new GridLayout();
+            layout = new GridLayout();
             this.controleur = controleur;
             description(layout);
             addActionListener(e -> controleur.tileAction(getCase()));
@@ -574,13 +516,13 @@ public class Vue extends JPanel {
 
         public PanelPort(Case c, Controleur controleur) {
             this.Case = c;
-            layout= new GridLayout();
+            layout = new GridLayout();
             this.setLayout(new GridLayout());
             this.controleur = controleur;
             description(layout);
             addActionListener(e -> controleur.tileAction(getCase()));
             this.setBackground(Color.LIGHT_GRAY);
-            //setPreferredSize(TILE_SIZE);
+            // setPreferredSize(TILE_SIZE);
             voleur = new PanelVoleur();
             add(voleur, layout);
             setUI(new MetalButtonUI() {
@@ -618,13 +560,13 @@ public class Vue extends JPanel {
         }
     }
 
-    public class PanelPortSpe extends PanelPort{
-        public PanelPortSpe(Case c, Controleur controleur){
+    public class PanelPortSpe extends PanelPort {
+        public PanelPortSpe(Case c, Controleur controleur) {
             super(c, controleur);
         }
 
-        public void description(GridLayout layout){
-            
+        public void description(GridLayout layout) {
+
         }
     }
 
@@ -700,4 +642,7 @@ public class Vue extends JPanel {
         }
     }
 
+    public void play() {
+
+    }
 }

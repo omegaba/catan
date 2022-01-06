@@ -2,14 +2,14 @@ package Jeu;
 
 import java.util.List;
 import java.util.LinkedList;
-import java.lang.Cloneable;
+
 
 import Joueur.Ia;
 import Joueur.Joueur;
 
 import java.util.Map;
 
-public class Configuration implements Cloneable {
+public class Configuration  {
 
     private final List<Joueur> listJoueurs;
     private int nbJoueur;
@@ -37,13 +37,6 @@ public class Configuration implements Cloneable {
         nbJoueur++;
     }
 
-    public Configuration clone() {
-        Configuration newConfig = new Configuration(null, ConfigName);
-        for (Joueur j : this.listJoueurs) {
-            newConfig.ajouterJoueur(j.getNom());
-        }
-        return newConfig;
-    }
 
     public void setConfigName(String newName) {
         this.ConfigName = newName;

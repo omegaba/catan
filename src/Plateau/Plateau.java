@@ -36,7 +36,7 @@ public class Plateau {
     private CarteChevalierLePlusPuissant chevalierPuissant;
     private CarteRouteLaPlusLongue routeLongue;
 
-    public Plateau() {
+    public Plateau(boolean flag) {
         int nbPortNormal = 3;
         int nbPortPlacer = 0;
         LinkedList<Integer> jeton = new LinkedList<>(Arrays.asList(2, 3, 4, 5, 5, 6, 6, 8, 8, 9, 9, 10, 10, 11, 12));
@@ -160,14 +160,15 @@ public class Plateau {
 
             }
         }
-
+        if(flag){
         Communication c = new Communication();
 
         int nbJoueurs = c.demanderNombreJoueurs();
         listJoueurs = new LinkedList<>();
+        
         for (int i = 0; i < nbJoueurs; i++)
             listJoueurs.add(c.demanderJoueurs(i, this));
-
+        }
         numeroJoueurActuel = 0;
         partiFini = false;
 

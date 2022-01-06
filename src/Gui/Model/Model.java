@@ -6,6 +6,7 @@ import Plateau.Infrastructures.Route;
 import java.util.LinkedList;
 import Plateau.Infrastructures.Colonie;
 import Carte.Developpement.CarteDeveloppement;
+import Gui.Controleur.ControleParametrage;
 import Gui.Controleur.Controleur;
 import Jeu.Configuration;
 
@@ -15,24 +16,25 @@ import Joueur.Joueur;
 
 public class Model {
     private final Plateau plateau;
+    private Configuration config;
     int tour;
     private LinkedList<Joueur> joueurs;
     private Joueur joueur_actuel;
     private int de;
     private Controleur controleur;
     private Vue vue;
+    private ControleParametrage controleParametrage;
 
     public Model() {
-        this.plateau = new Plateau();
-        this.joueurs.add(new Joueur("J1", null, null));
-        this.joueurs.add(new Joueur("J2", null, null));
-        joueur_actuel = plateau.getListJoueurs().get(0);
+        this.plateau = new Plateau(false);
+        this.config=new Configuration(null, null);
+       // joueur_actuel = plateau.getListJoueurs().get(0);
         de = 0;
         tour = 1;
     }
 
     public void ajouterJoueur(String nom) {
-        this.plateau.getListJoueurs().add(new Joueur(nom, null, null));
+        config.ajouterJoueur(nom);
     }
 
     public void ajouterIA(String nom) {
@@ -179,6 +181,23 @@ public class Model {
         return plateau.getVoleur();
     }
 
+
+    public void setControleur(Controleur controleur) {
+        if (controleur != null){
+         this.controleur = controleur;
+        }
+    }
+
+    public void setControleur(ControleParametrage controleur) {
+        if (controleParametrage != null){
+            this.controleParametrage = controleur;
+        }
+    }
+
+    public Configuration getConfiguration() {
+        return this.config;
+    }
+
    /* public void setNbJoueur(int nbJoueur){
 
     }*/
@@ -187,6 +206,12 @@ public class Model {
    /* public void initJeu(){
 
     }*/
-
+    public void initGame() {
+        if (config != null && config.ConfigFini()) {
+            //config.getListJoueurs().forEach(Joueur::initPiece);
+            //CarteDeveloppement.initDevCardStack();
+            joueur_actuel = config.getListJoueurs().get(0);
+        }
+    }
 
 }

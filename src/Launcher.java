@@ -1,9 +1,18 @@
 import Carte.*;
+import Gui.Model.Model;
+import Gui.Vue.Parametrage;
+//import Gui.Vue.Parametrage;
+import Gui.Vue.Vue;
 import Jeu.*;
 import Plateau.*;
 import Joueur.*;
+import javax.swing.*;
+import java.awt.*;
 
-public class Launcher {
+public class Launcher extends JFrame {
+    
+   /* private static  Parametrage scene;
+    private static JFrame window;*/
     public static void main(String[] args) {
 
         Communication c = new Communication();
@@ -15,7 +24,7 @@ public class Launcher {
     }
 
     static void jeuText() {
-        Plateau p = new Plateau();
+        Plateau p = new Plateau(true);
         AffichageText a = new AffichageText(p);
         a.affiche();
         p.deuxPremiersTour(a);
@@ -31,5 +40,13 @@ public class Launcher {
     }
 
     static void jeuGraph() {
+       /* EventQueue.invokeLater(() -> {
+            window = new JFrame();
+            scene = new Parametrage(window);
+            //scene.playFirst();
+        });*/
+
+        
     }
+
 }

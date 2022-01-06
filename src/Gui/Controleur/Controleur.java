@@ -151,13 +151,7 @@ public class Controleur {
         JOptionPane.showMessageDialog(vue, "c'est au tour de " + model.getJoueur().getNom());
     }
 
-   /* public void overLimitResources(Joueur p) {
-        if (p.getDeckCarteRessources().size() <= 7)
-            return;
-        JDialog dialog = new CustomJDialog(window, OverLimitPanel(this, window), true);
-        dialog.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        dialog.setVisible(true);
-    }*/
+  
 
     public void ChoixConstruction(Character c) {
         switch (c) {
@@ -175,10 +169,7 @@ public class Controleur {
         }
     }
 
-    public void impossibleConstructionMessage() {
-        JOptionPane.showMessageDialog(vue, "Vous ne pouvez pas construire ici", "Attenion",
-                JOptionPane.WARNING_MESSAGE);
-    }
+   
 
     public Model getModel(){
         return this.model;
@@ -194,9 +185,7 @@ public class Controleur {
         && !model.getJoueur().aRessource("ville") && !model.getJoueur().aRessource("route"));
     }
 
-   /* public void build(char c, ) {
-
-    }*/
+  
 
     public void tileAction(Case c){
         if(!isCardActive) DeplaceVoleur(c);
@@ -221,6 +210,9 @@ public class Controleur {
         vue.repaint();
     }
 
+    public void Build(){
+
+    }
 
 
 }
